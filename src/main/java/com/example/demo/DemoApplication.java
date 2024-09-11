@@ -17,7 +17,7 @@ public class DemoApplication {
 	}
 
 
-	@GetMapping
+	/*@GetMapping
 	public List<Hotel> hello(){
 		return List.of(
 				new Hotel(
@@ -32,10 +32,10 @@ public class DemoApplication {
 						"0705559052",
 						"thisis url",
 						5,
-						"thisi policy"
+						"thiis policy"
 				)
 		);
 	}
-
+*/
 
 }
