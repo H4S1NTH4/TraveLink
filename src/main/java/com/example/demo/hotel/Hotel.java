@@ -1,7 +1,21 @@
 package com.example.demo.hotel;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table
 public class Hotel {
-    private long id;
+    @Id
+    @SequenceGenerator(
+            name=  "hotel_sequence",
+            sequenceName = "hotel_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "hotel_sequence"
+    )
+    private Long hotel_Id;
     private String name;
     private String email;
     private String description;
@@ -29,7 +43,7 @@ public class Hotel {
                  String url,
                  int starRating,
                  String policies) {
-        this.id = id;
+        this.hotel_Id = id;
         this.name = name;
         this.email = email;
         this.description = description;
@@ -67,12 +81,12 @@ public class Hotel {
         this.policies = policies;
     }
 
-    public long getId() {
-        return id;
+    public long getHotel_Id() {
+        return hotel_Id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setHotel_Id(long id) {
+        this.hotel_Id = id;
     }
 
     public String getName() {
@@ -166,7 +180,7 @@ public class Hotel {
     @Override
     public String toString() {
         return "Hotel{" +
-                "id=" + id +
+                "id=" + hotel_Id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", description='" + description + '\'' +

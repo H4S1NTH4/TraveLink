@@ -17,25 +17,4 @@ public class DemoApplication {
 	}
 
 
-	/*@GetMapping
-	public List<Hotel> hello(){
-		return List.of(
-				new Hotel(
-						1L,
-						"Hilton",
-						"hi@gmail.com",
-						"this is descrip",
-						"this is address",
-						"Colombo",
-						"Western",
-						"Strilanka",
-						"0705559052",
-						"thisis url",
-						5,
-						"thiis policy"
-				)
-		);
-	}
-*/
-
 }
