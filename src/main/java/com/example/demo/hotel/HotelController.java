@@ -1,7 +1,11 @@
 package com.example.demo.hotel;
 
+import com.example.demo.hotel.dto.HotelCreateDTO;
+import com.example.demo.hotel.dto.HotelUpdateRequest;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +27,10 @@ public class HotelController {
     }
 
     @PostMapping
-    public void registerNewHotel(@RequestBody Hotel hotel){
-        hotelService.addNewHotel(hotel);
+    public ResponseEntity<?> registerNewHotel(@RequestBody @Valid HotelCreateDTO hotelCreateDTO) {
+        // Call the service method and return the ResponseEntity
+         ResponseEntity<String> response = hotelService.addNewHotel(hotelCreateDTO);
+        return response;
     }
 
     @DeleteMapping(path = "{hotel_Id}")
@@ -33,12 +39,10 @@ public class HotelController {
     }
 
     @PutMapping(path ="{hotel_Id}")
-    public void updateHotel(
-            @PathVariable("hotel_Id") Long hotel_Id,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email){
-        hotelService.updateHotel(hotel_Id, name, email);
-
+    public ResponseEntity<?> updateHotel(@PathVariable("hotel_Id") Long hotel_Id,
+                                         @RequestBody @Valid HotelUpdateRequest hotelUpdateRequest) {
+        hotelService.updateHotel(hotel_Id, hotelUpdateRequest);
+        return ResponseEntity.ok().build();
     }
 
 

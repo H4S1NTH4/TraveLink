@@ -1,2 +1,26 @@
-@Transactional - db operation of a method auto commit on success, rollback on failure.
+Here are all the explanations regarding the code
 
+@Transactional - db operation of a method auto commit on success, rollback on failure.
+-------------------------------------------------------
+public ResponseEntity<?> updateHotel vs public void updateHotel()
+- here we can send meaningful req bodies and custom http responses with using ResponseEntity.
+ and also object as req body
+----------------------------------------------------------
+@Valid annotation in reqs in controller clz
+    ut validate the DTO validation before calling updateHotel methode in service cls
+------------------------------------------------------------
+Mapper - use to map DTO cls to the entity cls instead of using a bunch of setters
+------------------------------------------------------------
+@ManyToOne(cascade = CascadeType.ALL)
+-this cascade will delete the child if parent deleted
+- this is for operation performed on the parent entity will be cascaded to its child entities.
+
+-------------------------------------------------------------
+private final seasonService seasonService;
+    public seasonController(seasonService seasonService) {
+        this.seasonService = seasonService;
+    }
+
+-Dependency Injection: In Spring, services like seasonService are typically managed by the Spring framework (as beans). Rather than manually instantiating the seasonService inside the SeasonController, Spring automatically provides an instance of seasonService via this constructor.
+-Decoupling: By injecting the seasonService via the constructor, it decouples the SeasonController from directly creating its dependencies. This makes the code easier to test and maintain.
+-----------------------------------------------------------

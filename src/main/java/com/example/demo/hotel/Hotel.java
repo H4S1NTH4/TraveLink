@@ -1,21 +1,20 @@
 package com.example.demo.hotel;
 
+import com.example.demo.contract.Contract;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table
 public class Hotel {
+
     @Id
-    @SequenceGenerator(
-            name=  "hotel_sequence",
-            sequenceName = "hotel_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "hotel_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long hotel_Id;
+
     private String name;
     private String email;
     private String description;
@@ -28,10 +27,19 @@ public class Hotel {
     private int starRating;
     private String policies;
 
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
+    private Set<Contract> contracts = new HashSet<>();
+
+    public Set<Contract> getContracts() {
+        return contracts;
+    }
+
     public Hotel() {
     }
 
-    public Hotel(long id,
+    public Hotel(long hotel_Id,
                  String name,
                  String email,
                  String description,
@@ -43,7 +51,7 @@ public class Hotel {
                  String url,
                  int starRating,
                  String policies) {
-        this.hotel_Id = id;
+        this.hotel_Id = hotel_Id;
         this.name = name;
         this.email = email;
         this.description = description;

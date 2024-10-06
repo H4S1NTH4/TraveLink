@@ -1,9 +1,13 @@
 package com.example.demo.hotel;
 
+import com.example.demo.hotel.dto.HotelCreateDTO;
+import com.example.demo.hotel.dto.HotelUpdateRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -15,23 +19,29 @@ import java.util.Optional;
 public class HotelService {
 
     private final HotelRepository hotelRepository;
+    private final HotelMapper hotelMapper;
 
     @Autowired
-    public HotelService(HotelRepository hotelRepository) {
+    public HotelService(HotelRepository hotelRepository, HotelMapper hotelMapper) {
         this.hotelRepository = hotelRepository;
+        this.hotelMapper = hotelMapper;
     }
 
     @GetMapping
     public List<Hotel> getHotels(){
            return hotelRepository.findAll();
         }
-    public void addNewHotel(Hotel hotel) {
-       Optional<Hotel> hotelByEmail =  hotelRepository.findHotelByEmail(hotel.getEmail());
-       if (hotelByEmail.isPresent()) {
-          throw new IllegalStateException("Hotel already exists") ;
-       }
+
+    public ResponseEntity<String> addNewHotel(HotelCreateDTO hotelCreateDTO) {
+        if (hotelRepository.findHotelByEmail(hotelCreateDTO.getEmail()).isPresent()) {
+            // Return HTTP 409 Conflict with an error message
+            return ResponseEntity.status(409).body("Hotel with email " + hotelCreateDTO.getEmail() + " already exists.");
+        }
+
+        // using mapstruct for map DTO to entity
+        Hotel hotel = hotelMapper.toHotel(hotelCreateDTO);
         hotelRepository.save(hotel);
-       System.out.println(hotel);
+        return ResponseEntity.status(201).body("Hotel created. id: "+hotel.getHotel_Id());
     }
 
     public void deleteHotel(Long hotel_Id) {
@@ -43,45 +53,13 @@ public class HotelService {
     }
 
     @Transactional
-    public void updateHotel(Long hotelId,
-                            String name,
-                            String email) {
+    public void updateHotel(Long hotelId, HotelUpdateRequest hotelUpdateRequest) {
         Hotel hotel = hotelRepository.findById(hotelId)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Hotel with id " + hotelId + " does not exist") );
+                .orElseThrow(() -> new IllegalStateException("Hotel with id " + hotelId + " does not exist"));
 
-        if (name != null && !name.isEmpty() && !Objects.equals(hotel.getName(), name)) {
-            hotel.setName(name);
-        }
+        hotelMapper.updateHotelFromDto(hotelUpdateRequest, hotel);
+        hotelRepository.save(hotel);
 
-        if (email != null && !email.isEmpty() && !Objects.equals(hotel.getEmail(), email) ) {
-            Optional<Hotel> hotelOptional = hotelRepository.findHotelByEmail(email);
-            if (hotelOptional.isPresent()) {
-                throw new IllegalStateException("Email already taken") ;
-            }
-            hotel.setEmail(email);
-        }
-    }
+
+    } //end updateHotel()
 }// end HotelService Class
-
-
-
-
-
-
- /*
- new Hotel
- (1L,
-  "Hilton"
-  "hi@gmail.com",
-
-"this is description",
-"this is address",
-"Colombo",
- Western",
-"Sri lanka",
-"0705559052",
-"this is url",
-5,
-"this is policy" )
-  */
