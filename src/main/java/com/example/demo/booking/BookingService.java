@@ -1,5 +1,6 @@
 package com.example.demo.booking;
 
+import com.example.demo.season.Season;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,14 @@ public class BookingService {
 
     public List<Booking> getBookings() {
         return bookingRepository.findAll();
-
     }
+
+    //create method createBooking
+    public Booking createBooking(Booking booking) {
+        return bookingRepository.save(booking);
+    }
+
+
 
 
 }
@@ -38,16 +45,9 @@ package com.example.demo.hotel;
 
 
 
-    @Autowired
-    public HotelService(HotelRepository hotelRepository, HotelMapper hotelMapper) {
-        this.hotelRepository = hotelRepository;
-        this.hotelMapper = hotelMapper;
-    }
 
-    @GetMapping
-    public List<Hotel> getHotels(){
-           return hotelRepository.findAll();
-        }
+
+
 
     public ResponseEntity<String> addNewHotel(HotelCreateDTO hotelCreateDTO) {
         if (hotelRepository.findHotelByEmail(hotelCreateDTO.getEmail()).isPresent()) {

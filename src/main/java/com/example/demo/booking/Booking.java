@@ -16,11 +16,10 @@ public class Booking {
 
     int guestCount;
     LocalDate bookingDate;
-
     float totalAmount;
-    float balancePayment;
     float totalDiscount;
-    float paidAmount;
+    //float balancePayment;
+    // float paidAmount;
 
     public Booking() {
     }
@@ -57,14 +56,6 @@ public class Booking {
         this.totalAmount = totalAmount;
     }
 
-    public float getBalancePayment() {
-        return balancePayment;
-    }
-
-    public void setBalancePayment(float balancePayment) {
-        this.balancePayment = balancePayment;
-    }
-
     public float getTotalDiscount() {
         return totalDiscount;
     }
@@ -73,12 +64,14 @@ public class Booking {
         this.totalDiscount = totalDiscount;
     }
 
-    public float getPaidAmount() {
-        return paidAmount;
-    }
+   /* public float getBalancePayment() { return balancePayment;    }
 
-    public void setPaidAmount(float paidAmount) {
-        this.paidAmount = paidAmount;
-    }
+    public void setBalancePayment(float balancePayment) { this.balancePayment = balancePayment;   }
+
+    public float getPaidAmount() {  return paidAmount; }
+
+    public void setPaidAmount(float paidAmount) { this.paidAmount = paidAmount; }
+
+    */
 
 }

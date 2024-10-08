@@ -19,6 +19,12 @@ public class BookingController {
     public List<Booking> getBookings() {
         return bookingService.getBookings();
     }
+
+    //createBooking
+    @PostMapping
+    public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
+        return ResponseEntity.ok(bookingService.createBooking(booking));
+    }
 }
 
 /*
