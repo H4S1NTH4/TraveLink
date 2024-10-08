@@ -26,6 +26,11 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.toList());
         return ResponseEntity.badRequest().body(errors);
     }
+    @ExceptionHandler(IllegalArgumentException.class) // Handle IllegalArgumentException
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
+        logger.error("Validation error: {}", ex.getMessage());
+        return ResponseEntity.badRequest().body(ex.getMessage()); // Return the error message directly
+    }
 
     @ExceptionHandler(Exception.class)
         public ResponseEntity<String> handleGenericException(Exception ex) {

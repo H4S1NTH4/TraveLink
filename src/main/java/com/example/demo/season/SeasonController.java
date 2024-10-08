@@ -1,5 +1,6 @@
 package com.example.demo.season;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class SeasonController {
         this.seasonService = seasonService;
     }
 
+    @Transactional
     @GetMapping
     public List<Season> getSeasons() {
         return seasonService.getSeasons();
@@ -30,9 +32,15 @@ public class SeasonController {
         return ResponseEntity.ok(season);
     }
 
+    @GetMapping("/byContract/{contract_Id}")
+    public ResponseEntity<List<Season>> getSeasonsByContractId(@PathVariable("contract_Id") Long contract_Id){
+        List<Season> seasons  = seasonService.getSeasonsByContractId(contract_Id);
+        return ResponseEntity.ok(seasons);
+
+    }
     @PostMapping
-    public ResponseEntity<?> createSeason(@RequestBody Season season) {
-        return ResponseEntity.ok(seasonService.createSeason(season));
+    public ResponseEntity<?> createSeason(@RequestBody Season season, @RequestParam Long contract_Id) {
+        return ResponseEntity.ok(seasonService.createSeason(season,contract_Id));
     }
 
     // Update a season

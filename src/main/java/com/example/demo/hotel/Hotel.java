@@ -28,7 +28,6 @@ public class Hotel {
     private String policies;
 
 
-    @JsonIgnore
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private Set<Contract> contracts = new HashSet<>();
 

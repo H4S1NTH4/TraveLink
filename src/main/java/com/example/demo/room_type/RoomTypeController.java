@@ -1,5 +1,6 @@
 package com.example.demo.room_type;
 
+import com.example.demo.season.SeasonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,8 @@ import java.util.List;
 public class RoomTypeController {
 
         private final RoomTypeService roomTypeService;
+
+
 
         //dependency injection
         @Autowired
@@ -44,9 +47,12 @@ public class RoomTypeController {
 
         // Delete a season
         @DeleteMapping("{roomTypeId}")
-        public ResponseEntity<Void> deleteSeason(@PathVariable Long roomTypeId) {
+        public ResponseEntity<Void> deleteRoomType(@PathVariable Long roomTypeId) {
             roomTypeService.deleteRoomType(roomTypeId);
             return ResponseEntity.noContent().build();
         }
+
+
+
 
 }

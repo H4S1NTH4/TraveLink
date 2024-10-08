@@ -1,0 +1,16 @@
+
+Hotel -> [ Contract -> [ Season ] ]   //(Cannot go backward)
+
+SeasonRoom -> [RoomType] , [Season] // cannot go back
+
+
+
+
+
+ public Set<RoomType> getRoomTypes() {
+        Set<RoomType> roomTypes = new HashSet<>();
+        for (RoomSeason roomSeason : roomSeasons) {
+            roomTypes.add(roomSeason.getRoomType());
+        }
+        return roomTypes;
+    }

@@ -3,16 +3,11 @@ import com.example.demo.contract.dto.ContractCreateDTO;
 import com.example.demo.contract.dto.ContractUpdateDTO;
 import com.example.demo.hotel.Hotel;
 import com.example.demo.hotel.HotelRepository;
-import com.example.demo.hotel.dto.HotelUpdateRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
