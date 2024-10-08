@@ -68,15 +68,9 @@ public class RoomType {
     public void setRoomTypeId(Long roomTypeId) {
         this.roomTypeId = roomTypeId;
     }
-    /*
-    public Set<Season> getRoomSeasons() {
+
+    public Set<RoomSeason> getRoomSeasons() {
         return roomSeasons;
     }
-    //method to add seasons to the List
-    public void addRoomSeason(Season season) {
-        roomSeasons.add(season);
 
-    }
-
-     */
 }

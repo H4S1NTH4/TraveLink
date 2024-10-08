@@ -7,10 +7,20 @@ SeasonRoom -> [RoomType] , [Season] // cannot go back
 
 
 
- public Set<RoomType> getRoomTypes() {
-        Set<RoomType> roomTypes = new HashSet<>();
-        for (RoomSeason roomSeason : roomSeasons) {
-            roomTypes.add(roomSeason.getRoomType());
-        }
-        return roomTypes;
-    }
+
+
+
+
+
+
+
+
+
+
+------------------------
+To be implemented
+
+1-(CG diary 1)
+Get All Rooms,
+    Create bookingroomtype table and after, add dto to rertieve room data + price + quantity.
+    For that create a complex method to display room types available.
