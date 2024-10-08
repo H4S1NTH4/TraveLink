@@ -14,22 +14,20 @@ public class BookingController {
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
+
+    @GetMapping
+    public List<Booking> getBookings() {
+        return bookingService.getBookings();
+    }
 }
 
 /*
 package com.example.demo.room_type;
 
 
-        //dependency injection
-        @Autowired
-        public RoomTypeController(RoomTypeService roomTypeService) {
-            this.roomTypeService = roomTypeService;
-        }
 
-        @GetMapping
-        public List<RoomType> getRoomTypes() {
-            return roomTypeService.getRoomTypes();
-        }
+
+
 
         // Get a season by ID
         @GetMapping("{roomTypeId}")
