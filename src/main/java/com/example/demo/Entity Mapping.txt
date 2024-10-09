@@ -21,6 +21,78 @@ SeasonRoom -> [RoomType] , [Season] // cannot go back
 To be implemented
 
 1-(CG diary 1)
-Get All Rooms,
+Get All Rooms available (hotel_Id, guest_count),
     Create bookingroomtype table and after, add dto to rertieve room data + price + quantity.
     For that create a complex method to display room types available.
+
+
+
+CREATE VIEW AvailableRoomTypes AS
+SELECT
+    rt.room_type_id AS roomTypeId,
+    rt.description,
+    rs.price,
+    rs.quantity,
+    s.season_start_date,
+    s.season_end_date,
+    h.hotel_Id AS hotelId,
+    h.name AS hotelName,
+    rt.capacity,
+    rs.room_season_id AS roomSeasonId
+FROM room_type rt
+JOIN room_season rs ON rt.room_type_id = rs.room_type_id
+JOIN season s ON rs.season_id = s.season_id
+JOIN contract c ON s.contract_id = c.contract_id
+JOIN hotel h ON c.hotel_id = h.hotel_id
+WHERE s.season_end_date >= CURRENT_DATE;
+
+
+
+@Query("SELECT rt FROM RoomType rt " +
+       "JOIN rt.roomSeasons rs " +
+       "JOIN rs.season s " +
+       "JOIN s.contract c " +
+       "WHERE c.hotel.id = :hotelId " +
+       "AND ((s.startDate <= :checkInDate AND s.endDate >= :checkInDate) " +
+       "OR (s.startDate <= :checkOutDate AND s.endDate >= :checkOutDate)) " +
+       "AND rt.occupancy >= :numberOfGuests " +
+       "AND rs.quantity > (" +  // Check for available quantity
+       "   SELECT COALESCE(SUM(brt.quantity), 0) FROM BookingRoomType brt " +
+       "   JOIN brt.booking b " +
+       "   WHERE b.checkinDate < :checkOutDate " +
+       "   AND b.checkoutDate > :checkInDate " +
+       "   AND brt.roomSeason.id = rs.id) ")
+List<RoomType> findAvailableRoomTypes(@Param("hotelId") Long hotelId,
+                                      @Param("checkInDate") LocalDate checkInDate,
+                                      @Param("checkOutDate") LocalDate checkOutDate,
+                                      @Param("numberOfGuests") int numberOfGuests);
+
+
+//simplified query using the view
+@Query("SELECT art FROM AvailableRoomTypes art " +
+       "WHERE art.hotelId = :hotelId " +
+       "AND ((art.startDate <= :checkInDate AND art.endDate >= :checkInDate) " +
+       "OR (art.startDate <= :checkOutDate AND art.endDate >= :checkOutDate)) " +
+       "AND art.occupancy >= :numberOfGuests " +
+       "AND art.roomQuantity > (" +
+       "   SELECT COALESCE(SUM(brt.quantity), 0) FROM BookingRoomType brt " +
+       "   JOIN brt.booking b " +
+       "   WHERE b.checkinDate < :checkOutDate " +
+       "   AND b.checkoutDate > :checkInDate " +
+       "   AND brt.roomSeason.id = art.roomSeasonId) ")
+List<RoomType> findAvailableRoomTypes(@Param("hotelId") Long hotelId,
+                                      @Param("checkInDate") LocalDate checkInDate,
+                                      @Param("checkOutDate") LocalDate checkOutDate,
+                                      @Param("numberOfGuests") int numberOfGuests);
+
+
+
+
+Get All Hotels(having available rooms)
+
+
+------------------------
+
+
+
+

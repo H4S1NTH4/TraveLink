@@ -29,8 +29,12 @@ public class BookingService {
         return bookingRepository.findAll();
     }
 
+
     //create method createBooking
     public Booking createBooking(Booking booking) {
+
+        //add logic to validate whether the rooms are available or not.
+
         return bookingRepository.save(booking);
     }
 
