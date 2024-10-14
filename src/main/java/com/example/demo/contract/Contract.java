@@ -21,6 +21,7 @@ public class Contract {
     @JoinColumn(name="hotel_Id", referencedColumnName = "hotel_Id")
     @JsonIgnore
     private Hotel hotel;
+
     @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Season> seasons = new HashSet<>();
 
@@ -133,6 +134,7 @@ public class Contract {
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
     }
+
     public Hotel getHotel() {
         return hotel;
     }

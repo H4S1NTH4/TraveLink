@@ -16,6 +16,7 @@ public class Season {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seasonId;
+
     @ManyToOne
     @JoinColumn(name="contract_Id", referencedColumnName = "contract_Id")
     @JsonIgnore
@@ -27,7 +28,7 @@ public class Season {
 
      */
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+   // @JsonIgnore
     private Set<RoomSeason> roomSeasons = new HashSet<>();
 
     private String seasonName;

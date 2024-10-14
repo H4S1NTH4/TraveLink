@@ -38,6 +38,8 @@ public class SupplementService {
     }
 
     public void deleteSupplement(Long supplementId) {
+        Supplement supplement = supplementRepository.findById(supplementId)
+                        .orElseThrow(() -> new IllegalStateException("Supplement with id " + supplementId + " not found"));
         supplementRepository.deleteById(supplementId);
     }
 }

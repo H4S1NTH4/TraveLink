@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
 @RestController
 @RequestMapping("api/v1/roomSeason")
 public class RoomSeasonController {
@@ -39,22 +38,28 @@ public class RoomSeasonController {
     public ResponseEntity<Void> addRoomTypesToSeason(
             @PathVariable Long roomTypeId,
             @PathVariable Long seasonId,
-            @RequestBody Map<String, Object> requestBody) {
+            @RequestBody RoomSeason roomSeasonData) {
 
-        // Extract price and quantity from the request body
-        double price = (double) requestBody.get("price");
-        int quantity = (int) requestBody.get("quantity");
-
-        roomSeasonService.addRoomTypesToSeason(roomTypeId, seasonId, price, quantity);
+        roomSeasonService.addRoomTypesToSeason(roomTypeId, seasonId, roomSeasonData);
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/{roomSeasonId}")
+    public ResponseEntity<RoomSeason> updateRoomSeason(
+            @PathVariable Long roomSeasonId,
+            @RequestBody RoomSeason roomSeason,
+            @RequestParam(required = false) Long roomTypeId,
+            @RequestParam(required = false) Long seasonId
+            ) {
 
-    /*
-     @PutMapping("/{roomTypeId}/seasons/{season_Id}")
-        public ResponseEntity<RoomType> addRoomTypesToSeason(@PathVariable Long roomTypeId, @PathVariable Long season_Id) {
-          roomTypeService.addRoomTypesToSeason(roomTypeId, season_Id);
-            return ResponseEntity.noContent().build();
-        }
-     */
+        RoomSeason updatedRoomSeason = roomSeasonService.updateRoomSeason(roomSeasonId,roomSeason,roomTypeId,seasonId);
+        return ResponseEntity.ok(updatedRoomSeason);
+    }
+    @DeleteMapping("/{roomSeasonId}")
+    public ResponseEntity<Void> deleteRoomSeason(@PathVariable Long roomSeasonId) {
+        roomSeasonService.deleteRoomSeasonById(roomSeasonId);
+        return ResponseEntity.noContent().build();
+    }
+    
+
 }

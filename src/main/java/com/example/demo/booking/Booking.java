@@ -1,11 +1,13 @@
 package com.example.demo.booking;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.demo.bookingRoomType.BookingRoomType;
+import com.example.demo.roomSeason.RoomSeason;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Booking {
@@ -20,6 +22,9 @@ public class Booking {
     float totalDiscount;
     //float balancePayment;
     // float paidAmount;
+
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    private Set<BookingRoomType> bookingRoomTypes = new HashSet<>();
 
     public Booking() {
     }

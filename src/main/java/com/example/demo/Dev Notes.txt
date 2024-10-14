@@ -29,4 +29,4 @@ private final seasonService seasonService;
   private Set<RoomSeason> roomSeasons = new HashSet<>();
 
 
-or[han removal - delete RoomSeason recods when room type deleted
+orphan removal - delete RoomSeason recods when room type deleted

@@ -1,7 +1,9 @@
 
 Hotel -> [ Contract -> [ Season ] ]   //(Cannot go backward)
 
-SeasonRoom -> [RoomType] , [Season] // cannot go back
+roomSeason -> [RoomType] , [Season]  , [bookingRoomType] // cannot go back
+
+BookingRoomType ->
 
 
 

@@ -1,52 +1,50 @@
-package com.example.demo.roomSeason;
+package com.example.demo.supplementSeason;
 
 import com.example.demo.bookingRoomType.BookingRoomType;
 import com.example.demo.room_type.RoomType;
 import com.example.demo.season.Season;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.demo.supplement.Supplement;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="room_season")
-public class RoomSeason {
+@Table(name="supplement_season")
+public class SupplementSeason {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long RoomSeasonId;
+    private Long supplementSeasonId;
 
     @ManyToOne
-    @JoinColumn(name = "roomTypeId", nullable = false)
-    private RoomType roomType;
+    @JoinColumn(name = "supplement_Id", nullable = false)
+    private Supplement supplement;
 
     @ManyToOne
     @JoinColumn(name = "season_Id", nullable = false)
-    @JsonIgnore
     private Season season;
 
-    @OneToMany(mappedBy = "roomSeason", cascade = CascadeType.ALL)
-    private Set<BookingRoomType> bookingRoomTypes = new HashSet<>();
+   /* @OneToMany(mappedBy = "supplementSeason")
+    private Set<BookingSupplement> bookingSupplements = new HashSet<>();  */
 
     private double price;
-    private int quantity;
 
-    public RoomSeason(){ }
+    public SupplementSeason() {
+    }
 
-    public RoomSeason(RoomType roomType, Season season, double price, int quantity) {
-        this.roomType = roomType;
+    public SupplementSeason(Supplement supplement, Season season, double price) {
+        this.supplement = supplement;
         this.season = season;
         this.price = price;
-        this.quantity = quantity;
     }
 
-    public RoomType getRoomType() {
-        return roomType;
+    public Supplement getSupplement() {
+        return supplement;
     }
 
-    public void setRoomType(RoomType roomType) {
-        this.roomType = roomType;
+    public void setSupplement(Supplement supplement) {
+        this.supplement = supplement;
     }
 
     public Season getSeason() {
@@ -65,14 +63,8 @@ public class RoomSeason {
         this.price = price;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
+/*
     public Set<BookingRoomType> getBookingRoomTypes() {
         return bookingRoomTypes;
     }
@@ -80,5 +72,6 @@ public class RoomSeason {
     public void setBookingRoomTypes(Set<BookingRoomType> bookingRoomTypes) {
         this.bookingRoomTypes = bookingRoomTypes;
     }
+*/
 
 }

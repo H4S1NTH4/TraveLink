@@ -1,8 +1,6 @@
 package com.example.demo.room_type;
 
-import com.example.demo.season.Season;
 import com.example.demo.season.SeasonRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +9,11 @@ import java.util.List;
 @Service
 public class RoomTypeService {
 
-    private final RoomtypeRepository roomtypeRepository;
+    private final RoomTypeRepository roomtypeRepository;
     private final SeasonRepository seasonRepository;
 
     @Autowired
-    public RoomTypeService(RoomtypeRepository roomtypeRepository, SeasonRepository seasonRepository) {
+    public RoomTypeService(RoomTypeRepository roomtypeRepository, SeasonRepository seasonRepository) {
         this.roomtypeRepository = roomtypeRepository;
         this.seasonRepository = seasonRepository;
     }
