@@ -3,6 +3,7 @@ package com.example.demo.season;
 import com.example.demo.contract.Contract;
 import com.example.demo.roomSeason.RoomSeason;
 import com.example.demo.room_type.RoomType;
+import com.example.demo.supplementSeason.SupplementSeason;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -22,14 +23,11 @@ public class Season {
     @JsonIgnore
     private Contract contract;
 
-    /*
-        @ManyToMany(mappedBy = "roomSeasons")
-        private Set<RoomType> seasonRoomTypes = new HashSet<>();
-
-     */
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
-   // @JsonIgnore
     private Set<RoomSeason> roomSeasons = new HashSet<>();
+
+    @OneToMany(mappedBy = "season")
+    private  Set<SupplementSeason> supplementSeasons = new HashSet<>();
 
     private String seasonName;
     private LocalDate seasonStartDate;
@@ -82,8 +80,21 @@ public class Season {
     public Contract getContract() {
         return contract;
     }
+
     public Set<RoomSeason> getRoomSeasons() {
         return roomSeasons;
+    }
+
+    public void setRoomSeasons(Set<RoomSeason> roomSeasons) {
+        this.roomSeasons = roomSeasons;
+    }
+
+    public Set<SupplementSeason> getSupplementSeasons() {
+        return supplementSeasons;
+    }
+
+    public void setSupplementSeasons(Set<SupplementSeason> supplementSeasons) {
+        this.supplementSeasons = supplementSeasons;
     }
 
 

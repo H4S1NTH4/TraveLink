@@ -24,14 +24,6 @@ public class BookingRoomType {
     private LocalDate checkoutDate;
     private int capacity;
 
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = "room_season_Id", nullable = false)
     @JsonIgnore
@@ -69,7 +61,13 @@ public class BookingRoomType {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+    public int getCapacity() {
+        return capacity;
+    }
 
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
     public double getRoomPrice() {
         return roomPrice;
     }

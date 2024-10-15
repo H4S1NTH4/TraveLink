@@ -1,6 +1,7 @@
 package com.example.demo.booking;
 
 import com.example.demo.bookingRoomType.BookingRoomType;
+import com.example.demo.bookingSupplement.BookingSupplement;
 import com.example.demo.roomSeason.RoomSeason;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -25,6 +26,9 @@ public class Booking {
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private Set<BookingRoomType> bookingRoomTypes = new HashSet<>();
+
+    @OneToMany(mappedBy = "booking")
+    private Set<BookingSupplement> bookingSupplements = new HashSet<>();
 
     public Booking() {
     }
@@ -69,6 +73,21 @@ public class Booking {
         this.totalDiscount = totalDiscount;
     }
 
+    public Set<BookingRoomType> getBookingRoomTypes() {
+        return bookingRoomTypes;
+    }
+
+    public void setBookingRoomTypes(Set<BookingRoomType> bookingRoomTypes) {
+        this.bookingRoomTypes = bookingRoomTypes;
+    }
+
+    public Set<BookingSupplement> getBookingSupplements() {
+        return bookingSupplements;
+    }
+
+    public void setBookingSupplements(Set<BookingSupplement> bookingSupplements) {
+        this.bookingSupplements = bookingSupplements;
+    }
    /* public float getBalancePayment() { return balancePayment;    }
 
     public void setBalancePayment(float balancePayment) { this.balancePayment = balancePayment;   }

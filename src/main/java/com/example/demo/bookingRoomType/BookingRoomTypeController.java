@@ -30,7 +30,19 @@ public class BookingRoomTypeController {
                                                                  @RequestBody BookingRoomType bookingRoomType) {
 
         return bookingRoomTypeService.createBookingRoomType(bookingId, roomSeasonId, bookingRoomType);
-        }
+    }
+
+
+    /*
+    //can change the booked room type or add extra rooms
+    @PutMapping("/booking/{bookingRoomTypeId}")
+    public  ResponseEntity<BookingRoomType> updateBookingRoomType(@PathVariable Long bookingRoomTypeId,
+                                                                 @RequestParam Long roomSeasonId,
+                                                                 @RequestBody BookingRoomType bookingRoomType) {
+        return bookingRoomTypeService.updateBookingRoomType(bookingRoomTypeId,roomSeasonId,bookingRoomType);
+    }
+
+    */
     
     
     

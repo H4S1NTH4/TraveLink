@@ -4,6 +4,7 @@ import com.example.demo.booking.Booking;
 import com.example.demo.booking.BookingRepository;
 import com.example.demo.roomSeason.RoomSeason;
 import com.example.demo.roomSeason.RoomSeasonRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,11 @@ public class BookingRoomTypeService {
         this.bookingRepository = bookingRepository;
     }
 
+    public List<BookingRoomType> getBookingRoomTypes() {
+        return bookingRoomTypeRepository.findAll();
+    }
 
-
+    @Transactional
     public ResponseEntity<BookingRoomType> createBookingRoomType(Long bookingId, Long roomSeasonId, BookingRoomType bookingRoomType) {
 
         // room price from roomSeason , room type name form roomType tbl
@@ -50,7 +54,20 @@ public class BookingRoomTypeService {
         return ResponseEntity.ok(bookingRoomType);
     }
 
-    public List<BookingRoomType> getBookingRoomTypes() {
-       return bookingRoomTypeRepository.findAll();
-    }
+   /* public ResponseEntity<BookingRoomType> updateBookingRoomType(Long bookingRoomTypeId, Long roomSeasonId, BookingRoomType bookingRoomType) {
+
+        BookingRoomType existingBookingRoomType = bookingRoomTypeRepository.findById(bookingRoomTypeId)
+                .orElseThrow(() -> new IllegalStateException("BookingRoomType with id " + bookingRoomTypeId + " not found"));
+
+        RoomSeason roomSeason = roomSeasonRepository.findById(roomSeasonId)
+                .orElseThrow(() -> new IllegalStateException("RoomSeason with id " + roomSeasonId + " not found"));
+
+
+
+
+        // Validate no of free rooms >= quantity
+
+
+        return null;
+    }  */
 }

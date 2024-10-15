@@ -26,6 +26,7 @@ public class RoomSeason {
     @JsonIgnore
     private Season season;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "roomSeason", cascade = CascadeType.ALL)
     private Set<BookingRoomType> bookingRoomTypes = new HashSet<>();
 
@@ -39,6 +40,14 @@ public class RoomSeason {
         this.season = season;
         this.price = price;
         this.quantity = quantity;
+    }
+
+    public Long getRoomSeasonId() {
+        return RoomSeasonId;
+    }
+
+    public void setRoomSeasonId(Long roomSeasonId) {
+        RoomSeasonId = roomSeasonId;
     }
 
     public RoomType getRoomType() {

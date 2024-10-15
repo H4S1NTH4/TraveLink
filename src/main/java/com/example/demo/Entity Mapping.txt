@@ -57,7 +57,7 @@ WHERE s.season_end_date >= CURRENT_DATE;
        "WHERE c.hotel.id = :hotelId " +
        "AND ((s.startDate <= :checkInDate AND s.endDate >= :checkInDate) " +
        "OR (s.startDate <= :checkOutDate AND s.endDate >= :checkOutDate)) " +
-       "AND rt.occupancy >= :numberOfGuests " +
+       "AND rt.occupancy >= :numberOfGuests " + // this should be removed. eg: 2 guests can by 2 single rooms
        "AND rs.quantity > (" +  // Check for available quantity
        "   SELECT COALESCE(SUM(brt.quantity), 0) FROM BookingRoomType brt " +
        "   JOIN brt.booking b " +
@@ -96,5 +96,46 @@ Get All Hotels(having available rooms)
 ------------------------
 
 
+New queries
 
 
+WITH SeasonsCovered AS (
+    SELECT s.start_date, s.end_date
+    FROM Season s
+    WHERE (s.start_date <= :checkInDate AND s.end_date >= :checkInDate)
+        OR (s.start_date <= :checkOutDate AND s.end_date >= :checkOutDate)
+),
+GapExists AS (
+    SELECT 1
+    FROM SeasonsCovered sc1
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM SeasonsCovered sc2
+        WHERE sc2.start_date = sc1.end_date + INTERVAL 1 DAY
+    )
+    AND sc1.end_date < :checkInDate
+),
+AvailableHotels AS (
+    SELECT h.hotel_id
+    FROM Hotel h
+    JOIN RoomSeason rs ON h.hotel_id = rs.hotel_id
+    JOIN Room r ON rs.room_id = r.room_id
+    WHERE r.available_rooms > 0
+    AND rs.start_date <= :checkOutDate
+    AND rs.end_date >= :checkInDate
+)
+SELECT h.*
+FROM Hotel h
+WHERE h.hotel_id IN (SELECT hotel_id FROM AvailableHotels)
+AND NOT EXISTS (SELECT 1 FROM GapExists);
+
+
+
+AvailableHotels AS (
+    SELECT h.hotel_id
+    FROM Hotel h
+    JOIN RoomSeason rs ON h.hotel_id = rs.hotel_id
+    JOIN Room r ON rs.room_id = r.room_id
+    WHERE r.available_rooms > 0
+    AND rs.start_date <= :checkOutDate
+    AND rs.end_date >= :checkInDate

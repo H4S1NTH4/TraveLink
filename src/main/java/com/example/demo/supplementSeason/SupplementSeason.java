@@ -1,9 +1,11 @@
 package com.example.demo.supplementSeason;
 
 import com.example.demo.bookingRoomType.BookingRoomType;
+import com.example.demo.bookingSupplement.BookingSupplement;
 import com.example.demo.room_type.RoomType;
 import com.example.demo.season.Season;
 import com.example.demo.supplement.Supplement;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -23,10 +25,12 @@ public class SupplementSeason {
 
     @ManyToOne
     @JoinColumn(name = "season_Id", nullable = false)
+    @JsonIgnore
     private Season season;
 
-   /* @OneToMany(mappedBy = "supplementSeason")
-    private Set<BookingSupplement> bookingSupplements = new HashSet<>();  */
+    @OneToMany(mappedBy = "supplementSeason")
+    @JsonIgnore
+    private Set<BookingSupplement> bookingSupplements = new HashSet<>();
 
     private double price;
 
@@ -64,14 +68,14 @@ public class SupplementSeason {
     }
 
 
-/*
-    public Set<BookingRoomType> getBookingRoomTypes() {
-        return bookingRoomTypes;
+
+    public Set<BookingSupplement> getBookingSupplements() {
+        return bookingSupplements;
     }
 
-    public void setBookingRoomTypes(Set<BookingRoomType> bookingRoomTypes) {
-        this.bookingRoomTypes = bookingRoomTypes;
+    public void setBookingSupplements(Set<BookingSupplement> bookingSupplements) {
+        this.bookingSupplements = bookingSupplements;
     }
-*/
+
 
 }
