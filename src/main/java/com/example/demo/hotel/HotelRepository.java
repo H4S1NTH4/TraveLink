@@ -3,6 +3,7 @@ package com.example.demo.hotel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -64,7 +65,14 @@ AvailableHotels AS (
 
 SELECT h.*
 FROM Hotel h
-WHERE h.hotel_id IN (SELECT hotel_id FROM AvailableHotels)
+WHERE (
+          (:location IS NULL OR\s
+          h.address LIKE CONCAT('%', :location, '%') OR\s
+          h.city LIKE CONCAT('%', :location, '%') OR\s
+          h.state LIKE CONCAT('%', :location, '%') OR\s
+          h.country LIKE CONCAT('%', :location, '%'))
+      )
+AND h.hotel_id IN (SELECT hotel_id FROM AvailableHotels)
 AND EXISTS(SELECT 1 FROM CheckInCovered)
 AND EXISTS(SELECT 1 FROM CheckOutCovered)
 AND NOT EXISTS (SELECT 1 FROM GapExists)
@@ -72,7 +80,8 @@ AND NOT EXISTS (SELECT 1 FROM GapExists)
     List<Hotel> findAvailableHotels(
             @Param("guestCount") int guestCount,
             @Param("checkInDate") LocalDate checkInDate,
-            @Param("checkOutDate") LocalDate checkOutDate
+            @Param("checkOutDate") LocalDate checkOutDate,
+            @Param("location") String location //location can be null
     );
 
 }

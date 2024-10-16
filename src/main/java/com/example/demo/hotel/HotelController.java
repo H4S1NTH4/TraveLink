@@ -34,9 +34,11 @@ public class HotelController {
 
     @GetMapping("/search")
     public List<Hotel> searchHotels(@RequestParam int guestCount,
-                                              @RequestParam LocalDate checkInDate,
-                                              @RequestParam LocalDate checkOutDate){
-        return hotelService.findAvailableHotels(guestCount, checkInDate,checkOutDate);
+                                    @RequestParam LocalDate checkInDate,
+                                    @RequestParam LocalDate checkOutDate,
+                                    @RequestParam(required = false) String location
+                                    ){
+        return hotelService.findAvailableHotels(guestCount, checkInDate,checkOutDate, location);
     }
 
     @PostMapping

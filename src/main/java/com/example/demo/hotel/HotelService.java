@@ -33,8 +33,8 @@ public class HotelService {
         return hotelRepository.findAll();
         }
 
-    public List<Hotel> findAvailableHotels(int guestCount, LocalDate checkInDate, LocalDate checkOutDate) {
-    return hotelRepository.findAvailableHotels(guestCount,checkInDate, checkOutDate);
+    public List<Hotel> findAvailableHotels(int guestCount, LocalDate checkInDate, LocalDate checkOutDate, String location) {
+    return hotelRepository.findAvailableHotels(guestCount,checkInDate, checkOutDate,location);
     }
 
     public ResponseEntity<String> addNewHotel(HotelCreateDTO hotelCreateDTO) {
