@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -24,6 +25,18 @@ public class HotelController {
     @GetMapping
     public List<Hotel> getHotels(){
         return hotelService.getHotels();
+    }
+
+    @GetMapping("{hotelId}")
+    public ResponseEntity<Hotel> getHotelById(@PathVariable Long hotelId){
+        return hotelService.getHotelById(hotelId);
+    }
+
+    @GetMapping("/search")
+    public List<Hotel> searchHotels(@RequestParam int guestCount,
+                                              @RequestParam LocalDate checkInDate,
+                                              @RequestParam LocalDate checkOutDate){
+        return hotelService.findAvailableHotels(guestCount, checkInDate,checkOutDate);
     }
 
     @PostMapping

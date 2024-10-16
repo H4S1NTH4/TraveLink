@@ -1,9 +1,12 @@
 package com.example.demo.room_type;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.demo.roomSeason.RoomSeason;
+import com.example.demo.season.Season;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class RoomType {
@@ -14,6 +17,9 @@ public class RoomType {
     private String Name;
     private String Description;
     private int Capacity;
+    @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<RoomSeason> roomSeasons = new HashSet<>();
 
     public RoomType() {
 
@@ -62,4 +68,9 @@ public class RoomType {
     public void setRoomTypeId(Long roomTypeId) {
         this.roomTypeId = roomTypeId;
     }
+
+    public Set<RoomSeason> getRoomSeasons() {
+        return roomSeasons;
+    }
+
 }

@@ -1,11 +1,15 @@
 package com.example.demo.season;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.demo.contract.Contract;
+import com.example.demo.roomSeason.RoomSeason;
+import com.example.demo.room_type.RoomType;
+import com.example.demo.supplementSeason.SupplementSeason;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Season {
@@ -13,6 +17,17 @@ public class Season {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seasonId;
+
+    @ManyToOne
+    @JoinColumn(name="contract_Id", referencedColumnName = "contract_Id")
+    @JsonIgnore
+    private Contract contract;
+
+    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RoomSeason> roomSeasons = new HashSet<>();
+
+    @OneToMany(mappedBy = "season")
+    private  Set<SupplementSeason> supplementSeasons = new HashSet<>();
 
     private String seasonName;
     private LocalDate seasonStartDate;
@@ -58,4 +73,29 @@ public class Season {
     public void setSeasonId(Long seasonId) {
         this.seasonId = seasonId;
     }
+
+    public void setContract(Contract contract){
+        this.contract=contract;
+    }
+    public Contract getContract() {
+        return contract;
+    }
+
+    public Set<RoomSeason> getRoomSeasons() {
+        return roomSeasons;
+    }
+
+    public void setRoomSeasons(Set<RoomSeason> roomSeasons) {
+        this.roomSeasons = roomSeasons;
+    }
+
+    public Set<SupplementSeason> getSupplementSeasons() {
+        return supplementSeasons;
+    }
+
+    public void setSupplementSeasons(Set<SupplementSeason> supplementSeasons) {
+        this.supplementSeasons = supplementSeasons;
+    }
+
+
 }

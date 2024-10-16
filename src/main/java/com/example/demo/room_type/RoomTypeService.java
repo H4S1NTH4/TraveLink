@@ -1,6 +1,5 @@
 package com.example.demo.room_type;
 
-import com.example.demo.season.Season;
 import com.example.demo.season.SeasonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,11 +9,13 @@ import java.util.List;
 @Service
 public class RoomTypeService {
 
-    private final RoomtypeRepository roomtypeRepository;
+    private final RoomTypeRepository roomtypeRepository;
+    private final SeasonRepository seasonRepository;
 
     @Autowired
-    public RoomTypeService(RoomtypeRepository roomtypeRepository) {
+    public RoomTypeService(RoomTypeRepository roomtypeRepository, SeasonRepository seasonRepository) {
         this.roomtypeRepository = roomtypeRepository;
+        this.seasonRepository = seasonRepository;
     }
 
     public List<RoomType> getRoomTypes() {
@@ -33,7 +34,7 @@ public class RoomTypeService {
 
     public RoomType updateRoomType(Long roomTypeId, RoomType roomTypeDetails) {
         RoomType roomType = roomtypeRepository.findById(roomTypeId)
-                .orElseThrow(() -> new IllegalStateException("Season with id " + roomTypeId + " not found"));
+                .orElseThrow(() -> new IllegalStateException("Room type with id " + roomTypeId + " not found"));
 
         roomType.setName(roomTypeDetails.getName());
         roomType.setCapacity(roomTypeDetails.getCapacity());
@@ -42,6 +43,9 @@ public class RoomTypeService {
         return roomtypeRepository.save(roomType);
     }
     public void deleteRoomType(Long roomTypeId) {
-     roomtypeRepository.deleteById(roomTypeId);
+
+        roomtypeRepository.deleteById(roomTypeId);
     }
+
+
 }

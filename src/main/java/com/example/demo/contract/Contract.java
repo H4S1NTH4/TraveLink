@@ -1,8 +1,12 @@
 package com.example.demo.contract;
 
 import com.example.demo.hotel.Hotel;
+import com.example.demo.season.Season;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table
@@ -15,14 +19,11 @@ public class Contract {
     //Many Contracts to One Hotel mapping
     @ManyToOne
     @JoinColumn(name="hotel_Id", referencedColumnName = "hotel_Id")
+    @JsonIgnore
     private Hotel hotel;
 
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
-    }
-    public Hotel getHotel() {
-        return hotel;
-    }
+    @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Season> seasons = new HashSet<>();
 
     LocalDate startDate;
     LocalDate endDate;
@@ -33,9 +34,7 @@ public class Contract {
     String cancelationPolicy;
     String termsAndConditions;
 
-    public Contract(){
-
-    }
+    public Contract(){}
 
     public Contract(LocalDate startDate, LocalDate endDate, float prePaymentPercentage, int balancePaymentDay, int cancelationDeadline, float cancelationFeePercentage, String cancelationPolicy, String termsAndConditions, Long contract_Id) {
         this.startDate = startDate;
@@ -131,4 +130,14 @@ public class Contract {
     public void setContract_Id(Long contract_Id) {
         this.contract_Id = contract_Id;
     }
+
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
+
+    public Hotel getHotel() {
+        return hotel;
+    }
+
+    public Set<Season> getSeasons() { return seasons; }
 }

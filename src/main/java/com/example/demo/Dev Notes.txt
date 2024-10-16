@@ -23,4 +23,10 @@ private final seasonService seasonService;
 
 -Dependency Injection: In Spring, services like seasonService are typically managed by the Spring framework (as beans). Rather than manually instantiating the seasonService inside the SeasonController, Spring automatically provides an instance of seasonService via this constructor.
 -Decoupling: By injecting the seasonService via the constructor, it decouples the SeasonController from directly creating its dependencies. This makes the code easier to test and maintain.
+
 -----------------------------------------------------------
+@OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<RoomSeason> roomSeasons = new HashSet<>();
+
+
+orphan removal - delete RoomSeason recods when room type deleted
