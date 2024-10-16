@@ -62,6 +62,12 @@ public class SeasonService {
         Season season = seasonRepository.findById(seasonId)
                 .orElseThrow(() -> new IllegalStateException("Season with id " + seasonId + " not found"));
 
+        Long contract_Id = season.getContract().getContract_Id();
+
+        seasonValidator.validateStartAndEnd(seasonDetails);
+        seasonValidator.validateNoOverlap(contract_Id,seasonId, seasonDetails, seasonRepository);
+        seasonValidator.seasonWithinContratPeriod(seasonDetails,season.getContract());
+
         season.setSeasonName(seasonDetails.getSeasonName());
         season.setSeasonStartDate(seasonDetails.getSeasonStartDate());
         season.setSeasonEndDate(seasonDetails.getSeasonEndDate());

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,8 +30,12 @@ public class HotelService {
 
     @GetMapping
     public List<Hotel> getHotels(){
-           return hotelRepository.findAll();
+        return hotelRepository.findAll();
         }
+
+    public List<Hotel> findAvailableHotels(int guestCount, LocalDate checkInDate, LocalDate checkOutDate) {
+    return hotelRepository.findAvailableHotels(guestCount,checkInDate, checkOutDate);
+    }
 
     public ResponseEntity<String> addNewHotel(HotelCreateDTO hotelCreateDTO) {
         if (hotelRepository.findHotelByEmail(hotelCreateDTO.getEmail()).isPresent()) {
@@ -62,4 +67,12 @@ public class HotelService {
 
 
     } //end updateHotel()
+
+    public ResponseEntity<Hotel> getHotelById(Long hotelId) {
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new IllegalStateException("Hotel with id " + hotelId + " does not exist"));
+        return ResponseEntity.ok(hotel);
+    }
+
+
 }// end HotelService Class

@@ -1,6 +1,7 @@
 package com.example.demo.roomSeason;
 
 import com.example.demo.bookingRoomType.BookingRoomType;
+import com.example.demo.hotel.Hotel;
 import com.example.demo.room_type.RoomType;
 import com.example.demo.season.Season;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -29,6 +30,11 @@ public class RoomSeason {
     @JsonIgnore
     @OneToMany(mappedBy = "roomSeason", cascade = CascadeType.ALL)
     private Set<BookingRoomType> bookingRoomTypes = new HashSet<>();
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "hotel_id")
+    private Hotel hotel;
 
     private double price;
     private int quantity;
@@ -88,6 +94,13 @@ public class RoomSeason {
 
     public void setBookingRoomTypes(Set<BookingRoomType> bookingRoomTypes) {
         this.bookingRoomTypes = bookingRoomTypes;
+    }
+    public Hotel getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
     }
 
 }

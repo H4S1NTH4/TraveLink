@@ -25,6 +25,30 @@ public class SeasonValidator {
         List<Season> existingSeasons = seasonRepository.findSeasonsByContractId(contract_Id);
 
         for (Season existingSeason : existingSeasons) {
+
+            //skip the checking with the same season that is going to update
+            if(newSeason.getSeasonId() !=null && existingSeason.getSeasonId().equals(newSeason.getSeasonId())){
+                continue;
+            }
+
+            if (isOverlapping(existingSeason, newSeason)) {
+                throw new IllegalArgumentException("The new season overlaps with an existing season.");
+            }
+        }
+    }
+
+
+    //Overridden ValidateNoOverlap method for validate the season when updating
+    public void validateNoOverlap(Long contract_Id,Long updatingSeasonId, Season newSeason, SeasonRepository seasonRepository) {
+        List<Season> existingSeasons = seasonRepository.findSeasonsByContractId(contract_Id);
+
+        for (Season existingSeason : existingSeasons) {
+
+            //skip the checking with the same season that is going to update
+            if(existingSeason.getSeasonId().equals(updatingSeasonId)){
+                continue;
+            }
+
             if (isOverlapping(existingSeason, newSeason)) {
                 throw new IllegalArgumentException("The new season overlaps with an existing season.");
             }

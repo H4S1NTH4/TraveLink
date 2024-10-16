@@ -1,5 +1,7 @@
 package com.example.demo.booking;
 
+import com.example.demo.hotel.Hotel;
+import com.example.demo.hotel.HotelRepository;
 import com.example.demo.season.Season;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
@@ -19,10 +21,12 @@ import java.util.List;
 public class BookingService {
 
     private final BookingRepository bookingRepository;
+    private final HotelRepository hotelRepository;
 
     @Autowired
-    public BookingService(BookingRepository bookingRepository){
+    public BookingService(BookingRepository bookingRepository, HotelRepository hotelRepository){
         this.bookingRepository = bookingRepository;
+        this.hotelRepository = hotelRepository;
     }
 
     public List<Booking> getBookings() {
@@ -31,58 +35,15 @@ public class BookingService {
 
 
     //create method createBooking
-    public Booking createBooking(Booking booking) {
+    public Booking createBooking(Booking booking, Long hotelId) {
+
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(()-> new IllegalArgumentException("Hotel with id: " +hotelId+ " not found"));
 
         //add logic to validate whether the rooms are available or not.
-
+        booking.setHotel(hotel);
         return bookingRepository.save(booking);
     }
 
 
-
-
 }
-
-/*
-package com.example.demo.hotel;
-
-
-
-
-
-
-
-
-    public ResponseEntity<String> addNewHotel(HotelCreateDTO hotelCreateDTO) {
-        if (hotelRepository.findHotelByEmail(hotelCreateDTO.getEmail()).isPresent()) {
-            // Return HTTP 409 Conflict with an error message
-            return ResponseEntity.status(409).body("Hotel with email " + hotelCreateDTO.getEmail() + " already exists.");
-        }
-
-        // using mapstruct for map DTO to entity
-        Hotel hotel = hotelMapper.toHotel(hotelCreateDTO);
-        hotelRepository.save(hotel);
-        return ResponseEntity.status(201).body("Hotel created. id: "+hotel.getHotel_Id());
-    }
-
-    public void deleteHotel(Long hotel_Id) {
-        boolean exists = hotelRepository.existsById(hotel_Id);
-        if (!exists) {
-            throw new IllegalStateException("Hotel with id " + hotel_Id + " does not exist") ;
-        }
-        hotelRepository.deleteById(hotel_Id);
-    }
-
-    @Transactional
-    public void updateHotel(Long hotelId, HotelUpdateRequest hotelUpdateRequest) {
-        Hotel hotel = hotelRepository.findById(hotelId)
-                .orElseThrow(() -> new IllegalStateException("Hotel with id " + hotelId + " does not exist"));
-
-        hotelMapper.updateHotelFromDto(hotelUpdateRequest, hotel);
-        hotelRepository.save(hotel);
-
-
-    } //end updateHotel()
-}// end HotelService Class
-
- */

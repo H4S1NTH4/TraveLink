@@ -2,9 +2,12 @@ package com.example.demo.booking;
 
 import com.example.demo.bookingRoomType.BookingRoomType;
 import com.example.demo.bookingSupplement.BookingSupplement;
+import com.example.demo.hotel.Hotel;
 import com.example.demo.roomSeason.RoomSeason;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import org.hibernate.mapping.Join;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -29,6 +32,13 @@ public class Booking {
 
     @OneToMany(mappedBy = "booking")
     private Set<BookingSupplement> bookingSupplements = new HashSet<>();
+
+
+
+    @ManyToOne
+    @JoinColumn(name = "hotel_Id")
+    @JsonIgnoreProperties("contracts")
+    private Hotel hotel;
 
     public Booking() {
     }
@@ -87,6 +97,13 @@ public class Booking {
 
     public void setBookingSupplements(Set<BookingSupplement> bookingSupplements) {
         this.bookingSupplements = bookingSupplements;
+    }
+    public Hotel getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
     }
    /* public float getBalancePayment() { return balancePayment;    }
 

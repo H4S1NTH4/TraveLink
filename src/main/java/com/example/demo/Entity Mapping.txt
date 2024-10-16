@@ -96,46 +96,108 @@ Get All Hotels(having available rooms)
 ------------------------
 
 
-New queries
+//Get hotels with occupancy for the number of guests
 
-
+@Query(value = """
 WITH SeasonsCovered AS (
     SELECT s.start_date, s.end_date
     FROM Season s
     WHERE (s.start_date <= :checkInDate AND s.end_date >= :checkInDate)
         OR (s.start_date <= :checkOutDate AND s.end_date >= :checkOutDate)
 ),
+CheckInCovered AS (
+    SELECT 1
+    FROM Season s
+    WHERE s.start_date <= :checkInDate AND s.end_date >= :checkInDate
+),
+CheckOutCovered AS (
+    SELECT 1
+    FROM Season s
+    WHERE s.start_date <= :checkOutDate AND s.end_date >= :checkOutDate
+),
 GapExists AS (
     SELECT 1
     FROM SeasonsCovered sc1
-    WHERE NOT EXISTS (
+    WHERE sc1.end_date < :checkOutDate
+    AND NOT EXISTS (
         SELECT 1
         FROM SeasonsCovered sc2
-        WHERE sc2.start_date = sc1.end_date + INTERVAL 1 DAY
-    )
-    AND sc1.end_date < :checkInDate
+        WHERE sc2.start_date = sc1.end_date + INTERVAL 1 DAY )
+
 ),
 AvailableHotels AS (
     SELECT h.hotel_id
     FROM Hotel h
-    JOIN RoomSeason rs ON h.hotel_id = rs.hotel_id
-    JOIN Room r ON rs.room_id = r.room_id
-    WHERE r.available_rooms > 0
-    AND rs.start_date <= :checkOutDate
-    AND rs.end_date >= :checkInDate
+    JOIN room_season rs ON h.hotel_id = rs.hotel_id
+    JOIN room_type rt ON rt.room_type_id = rs.room_type_id
+    WHERE (rs.quantity - COALESCE((
+               SELECT SUM(brt.quantity)
+               FROM booking_room_type brt
+               WHERE brt.room_season_id = rs.room_season_id
+               AND brt.checkin_date < :checkOutDate  -- user checkout
+               AND brt.checkout_date > :checkInDate  -- user checkin
+           ), 0)) * rt.capacity  >= :guestCount
 )
+
 SELECT h.*
 FROM Hotel h
 WHERE h.hotel_id IN (SELECT hotel_id FROM AvailableHotels)
-AND NOT EXISTS (SELECT 1 FROM GapExists);
+AND EXISTS(SELECT 1 FROM CheckInCovered)
+AND EXISTS(SELECT 1 FROM CheckOutCovered)
+AND NOT EXISTS (SELECT 1 FROM GapExists)
+ """, nativeQuery = true)
+
+List<Hotel> findAvailableHotels(
+            @Param("checkInDate") LocalDate checkInDate,
+            @Param("checkOutDate") LocalDate checkOutDate,
+            @Param("guestCount") int guestCount
+    );
 
 
 
-AvailableHotels AS (
-    SELECT h.hotel_id
-    FROM Hotel h
-    JOIN RoomSeason rs ON h.hotel_id = rs.hotel_id
-    JOIN Room r ON rs.room_id = r.room_id
-    WHERE r.available_rooms > 0
-    AND rs.start_date <= :checkOutDate
-    AND rs.end_date >= :checkInDate
+
+
+
+
+//available room types query
+
+#get all available rooms count * capacity > guest count
+SELECT rt.room_type_id, rt.name AS room_type_name,
+       rs.room_season_id,
+       rs.quantity - COALESCE((
+           SELECT SUM(brt.quantity)
+           FROM booking_room_type brt
+           WHERE brt.room_season_id = rs.room_season_id
+           AND brt.checkin_date < '2024-11-15'  -- user checkout
+           AND brt.checkout_date > '2024-11-12'  -- user checkin
+       ), 0) AS available_rooms
+#FROM hotel h
+#JOIN room_season rs ON rs.hotel_id = h.hotel_id
+FROM room_season rs
+JOIN room_type rt ON rt.room_type_id = rs.room_type_id
+WHERE (rs.quantity - COALESCE((
+           SELECT SUM(brt.quantity)
+           FROM booking_room_type brt
+           WHERE brt.room_season_id = rs.room_season_id
+           AND brt.checkin_date < '2024-11-15'  -- user checkout
+           AND brt.checkout_date > '2024-11-12'  -- user checkin
+       ), 0) )* rt.capacity >= :guestCount;
+
+
+
+
+// to get booked room counts
+    @Query("""
+        SELECT SUM(brt.quantity), rt.name
+        FROM BookingRoomType brt
+        JOIN brt.roomSeason rs
+        JOIN rs.roomType rt
+        WHERE brt.checkinDate < :userCheckoutDate
+        AND brt.checkoutDate > :userCheckinDate
+        GROUP BY rs.roomType.roomTypeId
+    """)
+    List<Object[]> findBookedRoomQuantities(@Param("userCheckinDate") LocalDate userCheckinDate,
+                                            @Param("userCheckoutDate") LocalDate userCheckoutDate;
+
+
+

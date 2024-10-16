@@ -1,6 +1,7 @@
 package com.example.demo.hotel;
 
 import com.example.demo.contract.Contract;
+import com.example.demo.roomSeason.RoomSeason;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -30,6 +31,10 @@ public class Hotel {
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private Set<Contract> contracts = new HashSet<>();
+
+    @OneToMany(mappedBy = "hotel")
+    @JsonIgnore
+    private Set<RoomSeason> roomSeasons = new HashSet<>();
 
     public Set<Contract> getContracts() {
         return contracts;
@@ -182,6 +187,13 @@ public class Hotel {
 
     public void setPolicies(String policies) {
         this.policies = policies;
+    }
+    public Set<RoomSeason> getRoomSeasons() {
+        return roomSeasons;
+    }
+
+    public void setRoomSeasons(Set<RoomSeason> roomSeasons) {
+        this.roomSeasons = roomSeasons;
     }
 
     @Override

@@ -33,6 +33,7 @@ public class RoomSeasonService {
         Double price = roomSeasonData.getPrice();
         int quantity = roomSeasonData.getQuantity();
         RoomSeason roomSeason = new RoomSeason(roomType, season, price, quantity);
+        roomSeason.setHotel(season.getContract().getHotel());
         roomSeasonRepository.save(roomSeason);
     }
 

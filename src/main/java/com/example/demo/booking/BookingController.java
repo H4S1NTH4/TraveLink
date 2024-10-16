@@ -21,49 +21,9 @@ public class BookingController {
     }
 
     //createBooking
-    @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
-        return ResponseEntity.ok(bookingService.createBooking(booking));
+    @PostMapping("/hotel/{hotelId}")
+    public ResponseEntity<Booking> createBooking(@RequestBody Booking booking,
+                                                 @PathVariable Long hotelId) {
+        return ResponseEntity.ok(bookingService.createBooking(booking,hotelId));
     }
 }
-
-/*
-package com.example.demo.room_type;
-
-
-
-
-
-
-        // Get a season by ID
-        @GetMapping("{roomTypeId}")
-        public ResponseEntity<RoomType> getRoomTypeById(@PathVariable Long roomTypeId) {
-            RoomType roomType = roomTypeService.getRoomTypeById(roomTypeId);
-            return ResponseEntity.ok(roomType);
-        }
-
-        @PostMapping
-        public ResponseEntity<?> createRoomType(@RequestBody RoomType roomType) {
-            return ResponseEntity.ok(roomTypeService.createRoomType(roomType));
-        }
-
-        // Update a season
-        @PutMapping("{roomTypeId}")
-        public ResponseEntity<RoomType> updateSeason(@PathVariable Long roomTypeId, @RequestBody RoomType RoomTypeDetails) {
-            RoomType updatedRoomType = roomTypeService.updateRoomType(roomTypeId, RoomTypeDetails);
-            return ResponseEntity.ok(updatedRoomType);
-        }
-
-        // Delete a season
-        @DeleteMapping("{roomTypeId}")
-        public ResponseEntity<Void> deleteRoomType(@PathVariable Long roomTypeId) {
-            roomTypeService.deleteRoomType(roomTypeId);
-            return ResponseEntity.noContent().build();
-        }
-
-
-
-
-}
-
- */
