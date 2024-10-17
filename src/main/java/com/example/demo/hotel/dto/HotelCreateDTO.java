@@ -35,6 +35,10 @@ public class HotelCreateDTO {
     @Size(max = 255, message = "URL must be less than 255 characters")
     private String url;
 
+    @NotBlank(message = "Image URL is required")
+    @Size(max = 255, message = "URL must be less than 255 characters")
+    private String imageUrl;
+
     @Min(value = 1, message = "Star rating must be between 1 and 7")
     private Integer starRating;
 
@@ -110,6 +114,14 @@ public class HotelCreateDTO {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public @NotBlank(message = "Image URL is required") @Size(max = 255, message = "URL must be less than 255 characters") String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(@NotBlank(message = "Image URL is required") @Size(max = 255, message = "URL must be less than 255 characters") String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Integer getStarRating() {

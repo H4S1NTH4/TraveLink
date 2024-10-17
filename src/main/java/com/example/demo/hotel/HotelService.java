@@ -37,7 +37,7 @@ public class HotelService {
     return hotelRepository.findAvailableHotels(guestCount,checkInDate, checkOutDate,location);
     }
 
-    public ResponseEntity<String> addNewHotel(HotelCreateDTO hotelCreateDTO) {
+    public ResponseEntity<?> addNewHotel(HotelCreateDTO hotelCreateDTO) {
         if (hotelRepository.findHotelByEmail(hotelCreateDTO.getEmail()).isPresent()) {
             // Return HTTP 409 Conflict with an error message
             return ResponseEntity.status(409).body("Hotel with email " + hotelCreateDTO.getEmail() + " already exists.");
@@ -46,7 +46,7 @@ public class HotelService {
         // using mapstruct for map DTO to entity
         Hotel hotel = hotelMapper.toHotel(hotelCreateDTO);
         hotelRepository.save(hotel);
-        return ResponseEntity.status(201).body("Hotel created. id: "+hotel.getHotel_Id());
+        return ResponseEntity.status(201).body(hotel);
     }
 
     public void deleteHotel(Long hotel_Id) {

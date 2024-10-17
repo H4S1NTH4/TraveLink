@@ -44,8 +44,8 @@ public class HotelController {
     @PostMapping
     public ResponseEntity<?> registerNewHotel(@RequestBody @Valid HotelCreateDTO hotelCreateDTO) {
         // Call the service method and return the ResponseEntity
-         ResponseEntity<String> response = hotelService.addNewHotel(hotelCreateDTO);
-        return response;
+        return ResponseEntity.ok(hotelService.addNewHotel(hotelCreateDTO));
+
     }
 
     @DeleteMapping(path = "{hotel_Id}")

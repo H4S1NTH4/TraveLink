@@ -13,7 +13,7 @@ import java.util.Map;
 public class JwtUtil {
 
     private String secretKey = "your_secret_key"; // Change this to a secure key
-    private long validity = 600 * 60 * 1000; // 5 minutes
+    private long validity = 3* 60 * 60 * 1000; // 3 hours  hr * min * sec * ms
 
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
