@@ -29,8 +29,8 @@ public class ContractService {
         this.contractValidator = contractValidator;
     }
 
-    @GetMapping
     public List<Contract> getContracts() {
+
         return contractRepository.findAll();
     }
 
@@ -42,7 +42,7 @@ public class ContractService {
         return contracts;
     }
 
-    public ResponseEntity<String> createContract(ContractCreateDTO contractCreateDTO) {
+    public ResponseEntity<?> createContract(ContractCreateDTO contractCreateDTO) {
 
         //retrieve hotel by Id
         Hotel hotel = hotelRepository.findById(contractCreateDTO.getHotel_Id())
@@ -57,11 +57,29 @@ public class ContractService {
 
         contract.setHotel(hotel);
         contractRepository.save(contract);
-        return ResponseEntity.status(201).body("Contract created, Id: "+contract.getContract_Id());
+        return ResponseEntity.status(201).body(contract);
     }
 
     @Transactional
-    public void updateContract(Long contractId, @Valid ContractUpdateDTO contractUpdateDTO) {
+    public ResponseEntity<?> updateContract(Long contractId, @Valid ContractUpdateDTO contractUpdateDTO) {
+
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new IllegalArgumentException("Contract with id " + contractId + " does not exist"));
+
+        Hotel hotel = hotelRepository.findById(contractUpdateDTO.getHotel_Id())
+                .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+
+        contract.setHotel(hotel);
+        contractMapper.updateContractFromDto(contractUpdateDTO, contract);
+        contractRepository.save(contract);
+
+        //ContractResponseDTO responseDTO = contractMapper.toDto(contract); //
+        return ResponseEntity.ok(contract);
+    }
+
+   /* @Transactional
+    public ResponseEntity<?> updateContract(Long contractId, @Valid ContractUpdateDTO contractUpdateDTO) {
+
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new IllegalArgumentException("Contract with id " + contractId + " does not exist"));
         Hotel hotel =hotelRepository.findById(contractUpdateDTO.getHotel_Id())
@@ -70,7 +88,11 @@ public class ContractService {
         contract.setHotel(hotel);
         contractMapper.updateContractFromDto(contractUpdateDTO, contract);
         contractRepository.save(contract);
+
+        return ResponseEntity.status(200).body(contract);
     }
+
+    */
 
     public void deleteContract(Long contractId) {
         boolean exists = contractRepository.existsById(contractId);
