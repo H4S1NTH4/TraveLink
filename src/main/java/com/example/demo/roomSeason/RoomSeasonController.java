@@ -34,7 +34,7 @@ public class RoomSeasonController {
         return ResponseEntity.ok(roomSeason);
     }
 
-    @PostMapping("/{roomTypeId}/seasons/{seasonId}")
+    @PostMapping("/roomType/{roomTypeId}/seasons/{seasonId}")
     public ResponseEntity<Void> addRoomTypesToSeason(
             @PathVariable Long roomTypeId,
             @PathVariable Long seasonId,
