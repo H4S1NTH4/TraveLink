@@ -25,17 +25,21 @@ public class ContractController {
         return contractService.getContracts();
     }
 
+    @GetMapping(path = "/hotel/{hotelId}")
+    public List<Contract> getContractsByHotelId(@PathVariable Long hotelId) {
+        return contractService.getContractsByHotelId(hotelId);
+    }
+
+
     @PostMapping
     public ResponseEntity<?> createContract(@RequestBody @Valid ContractCreateDTO contractCreateDTO) {
-        ResponseEntity<String> response = contractService.createContract(contractCreateDTO);
-        return response;
+        return ResponseEntity.ok(contractService.createContract(contractCreateDTO));
     }
 
     @PutMapping(path="{contract_Id}")
     public ResponseEntity<?>updateContract(@PathVariable("contract_Id") Long contract_Id,
                                            @RequestBody @Valid ContractUpdateDTO contractUpdateDTO){
-        contractService.updateContract(contract_Id, contractUpdateDTO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(contractService.updateContract(contract_Id, contractUpdateDTO));
     }
 
     @DeleteMapping(path = "{contract_Id}")

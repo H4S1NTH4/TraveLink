@@ -25,6 +25,7 @@ public class Hotel {
     private String country;
     private String phone;
     private String url;
+    private String imageUrl;
     private int starRating;
     private String policies;
 
@@ -53,6 +54,7 @@ public class Hotel {
                  String country,
                  String phone,
                  String url,
+                 String imageUrl,
                  int starRating,
                  String policies) {
         this.hotel_Id = hotel_Id;
@@ -65,6 +67,7 @@ public class Hotel {
         this.country = country;
         this.phone = phone;
         this.url = url;
+        this.imageUrl = imageUrl;
         this.starRating = starRating;
         this.policies = policies;
     }
@@ -78,6 +81,7 @@ public class Hotel {
                  String country,
                  String phone,
                  String url,
+                 String imageUrl,
                  int starRating,
                  String policies) {
         this.name = name;
@@ -89,6 +93,7 @@ public class Hotel {
         this.country = country;
         this.phone = phone;
         this.url = url;
+        this.imageUrl = imageUrl;
         this.starRating = starRating;
         this.policies = policies;
     }
@@ -194,6 +199,14 @@ public class Hotel {
 
     public void setRoomSeasons(Set<RoomSeason> roomSeasons) {
         this.roomSeasons = roomSeasons;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     @Override

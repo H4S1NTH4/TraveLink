@@ -3,6 +3,7 @@ package com.example.demo.hotel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -18,6 +19,80 @@ public interface HotelRepository
     Optional<Hotel> findHotelByEmail(String email);
 
 
+    //Get hotels with occupancy for the number of guests
+
+    @Query(value = """
+WITH SeasonsCovered AS (
+    SELECT s.season_start_date, s.season_end_date, s.season_id
+    FROM Season s
+     WHERE s.season_start_date <= :checkOutDate AND s.season_end_date >= :checkInDate
+),
+GapExists AS (
+    SELECT 1
+    FROM SeasonsCovered sc1
+    WHERE sc1.season_end_date < :checkOutDate
+    AND NOT EXISTS (
+        SELECT 1
+        FROM SeasonsCovered sc2
+        WHERE sc2.season_start_date = sc1.season_end_date + INTERVAL 1 DAY )
+),
+CheckInCovered AS (
+    SELECT 1
+    FROM Season s
+    WHERE s.season_start_date <= :checkInDate AND s.season_end_date >= :checkInDate
+),
+CheckOutCovered AS (
+    SELECT 1
+    FROM Season s
+    WHERE s.season_start_date <= :checkOutDate AND s.season_end_date >= :checkOutDate
+),
+AvailableHotels AS (
+    SELECT h.hotel_id
+    FROM Hotel h
+    JOIN room_season rs ON rs.hotel_id = h.hotel_id
+    JOIN room_type rt ON rt.room_type_id = rs.room_type_id
+    JOIN SeasonsCovered sc ON sc.season_id = rs.season_id
+    -- Here we group by hotel_id and season_id
+    GROUP BY h.hotel_id, sc.season_id
+    HAVING SUM((rs.quantity - COALESCE((
+               SELECT SUM(brt.quantity)
+               FROM booking_room_type brt
+               WHERE brt.room_season_id = rs.room_season_id
+               AND brt.checkin_date < :checkOutDate  -- user checkout
+               AND brt.checkout_date > :checkInDate  -- user checkin
+           ), 0)) * rt.capacity ) >= :guestCount
+    )
+    
+    -- having dala filter krnn sc eken eana season wlin aduma eka < guest capacity blnn
+                        
+SELECT h.*
+FROM Hotel h
+WHERE (
+          (:location IS NULL OR
+          h.address LIKE CONCAT('%', :location, '%') OR
+          h.city LIKE CONCAT('%', :location, '%') OR
+          h.state LIKE CONCAT('%', :location, '%') OR
+          h.country LIKE CONCAT('%', :location, '%'))
+      )
+AND EXISTS (SELECT 1 FROM CheckInCovered)
+AND EXISTS (SELECT 1 FROM CheckOutCovered)
+AND NOT EXISTS (SELECT 1 FROM GapExists)
+AND h.hotel_id IN (SELECT hotel_id FROM AvailableHotels)
+ """, nativeQuery = true)
+    List<Hotel> findAvailableHotels(
+            @Param("guestCount") int guestCount,
+            @Param("checkInDate") LocalDate checkInDate,
+            @Param("checkOutDate") LocalDate checkOutDate,
+            @Param("location") String location //location can be null
+    );
+
+}
+
+
+
+
+
+/*
     //Get hotels with occupancy for the number of guests
 
     @Query(value = """
@@ -64,7 +139,14 @@ AvailableHotels AS (
 
 SELECT h.*
 FROM Hotel h
-WHERE h.hotel_id IN (SELECT hotel_id FROM AvailableHotels)
+WHERE (
+          (:location IS NULL OR\s
+          h.address LIKE CONCAT('%', :location, '%') OR\s
+          h.city LIKE CONCAT('%', :location, '%') OR\s
+          h.state LIKE CONCAT('%', :location, '%') OR\s
+          h.country LIKE CONCAT('%', :location, '%'))
+      )
+AND h.hotel_id IN (SELECT hotel_id FROM AvailableHotels)
 AND EXISTS(SELECT 1 FROM CheckInCovered)
 AND EXISTS(SELECT 1 FROM CheckOutCovered)
 AND NOT EXISTS (SELECT 1 FROM GapExists)
@@ -72,7 +154,7 @@ AND NOT EXISTS (SELECT 1 FROM GapExists)
     List<Hotel> findAvailableHotels(
             @Param("guestCount") int guestCount,
             @Param("checkInDate") LocalDate checkInDate,
-            @Param("checkOutDate") LocalDate checkOutDate
+            @Param("checkOutDate") LocalDate checkOutDate,
+            @Param("location") String location //location can be null
     );
-
-}
+ */

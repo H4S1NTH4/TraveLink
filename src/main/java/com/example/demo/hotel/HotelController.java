@@ -34,16 +34,18 @@ public class HotelController {
 
     @GetMapping("/search")
     public List<Hotel> searchHotels(@RequestParam int guestCount,
-                                              @RequestParam LocalDate checkInDate,
-                                              @RequestParam LocalDate checkOutDate){
-        return hotelService.findAvailableHotels(guestCount, checkInDate,checkOutDate);
+                                    @RequestParam LocalDate checkInDate,
+                                    @RequestParam LocalDate checkOutDate,
+                                    @RequestParam(required = false) String location
+                                    ){
+        return hotelService.findAvailableHotels(guestCount, checkInDate,checkOutDate, location);
     }
 
     @PostMapping
     public ResponseEntity<?> registerNewHotel(@RequestBody @Valid HotelCreateDTO hotelCreateDTO) {
         // Call the service method and return the ResponseEntity
-         ResponseEntity<String> response = hotelService.addNewHotel(hotelCreateDTO);
-        return response;
+        return ResponseEntity.ok(hotelService.addNewHotel(hotelCreateDTO));
+
     }
 
     @DeleteMapping(path = "{hotel_Id}")
