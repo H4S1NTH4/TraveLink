@@ -23,7 +23,7 @@ public interface HotelRepository
 
     @Query(value = """
 WITH SeasonsCovered AS (
-    SELECT s.season_start_date, s.season_end_date
+    SELECT s.season_start_date, s.season_end_date, s.season_id
     FROM Season s
      WHERE s.season_start_date <= :checkOutDate AND s.season_end_date >= :checkInDate
 ),
@@ -51,7 +51,9 @@ AvailableHotels AS (
     FROM Hotel h
     JOIN room_season rs ON rs.hotel_id = h.hotel_id
     JOIN room_type rt ON rt.room_type_id = rs.room_type_id
-    GROUP BY h.hotel_id
+    JOIN SeasonsCovered sc ON sc.season_id = rs.season_id
+    -- Here we group by hotel_id and season_id
+    GROUP BY h.hotel_id, sc.season_id
     HAVING SUM((rs.quantity - COALESCE((
                SELECT SUM(brt.quantity)
                FROM booking_room_type brt
@@ -59,8 +61,10 @@ AvailableHotels AS (
                AND brt.checkin_date < :checkOutDate  -- user checkout
                AND brt.checkout_date > :checkInDate  -- user checkin
            ), 0)) * rt.capacity ) >= :guestCount
-)
-
+    )
+    
+    -- having dala filter krnn sc eken eana season wlin aduma eka < guest capacity blnn
+                        
 SELECT h.*
 FROM Hotel h
 WHERE (
@@ -83,6 +87,9 @@ AND h.hotel_id IN (SELECT hotel_id FROM AvailableHotels)
     );
 
 }
+
+
+
 
 
 /*
