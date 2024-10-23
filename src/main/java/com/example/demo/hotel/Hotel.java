@@ -33,13 +33,9 @@ public class Hotel {
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private Set<Contract> contracts = new HashSet<>();
 
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<RoomSeason> roomSeasons = new HashSet<>();
-
-    public Set<Contract> getContracts() {
-        return contracts;
-    }
 
     public Hotel() {
     }
@@ -208,6 +204,11 @@ public class Hotel {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public Set<Contract> getContracts() {
+        return contracts;
+    }
+
 
     @Override
     public String toString() {

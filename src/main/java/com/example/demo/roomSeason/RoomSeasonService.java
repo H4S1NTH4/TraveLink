@@ -1,4 +1,5 @@
 package com.example.demo.roomSeason;
+import com.example.demo.hotel.Hotel;
 import com.example.demo.room_type.RoomType;
 import com.example.demo.room_type.RoomTypeRepository;
 import com.example.demo.season.Season;

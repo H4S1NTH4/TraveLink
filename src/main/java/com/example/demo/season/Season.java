@@ -26,7 +26,7 @@ public class Season {
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RoomSeason> roomSeasons = new HashSet<>();
 
-    @OneToMany(mappedBy = "season")
+    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
     private  Set<SupplementSeason> supplementSeasons = new HashSet<>();
 
     private String seasonName;

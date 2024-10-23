@@ -19,7 +19,7 @@ public class RoomSeason {
     private Long RoomSeasonId;
 
     @ManyToOne
-    @JoinColumn(name = "roomTypeId", nullable = false)
+    @JoinColumn(name = "room_type_id", nullable = false)
     private RoomType roomType;
 
     @ManyToOne

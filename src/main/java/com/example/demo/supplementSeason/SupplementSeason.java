@@ -28,7 +28,7 @@ public class SupplementSeason {
     @JsonIgnore
     private Season season;
 
-    @OneToMany(mappedBy = "supplementSeason")
+    @OneToMany(mappedBy = "supplementSeason" , cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<BookingSupplement> bookingSupplements = new HashSet<>();
 

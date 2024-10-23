@@ -17,9 +17,12 @@ public class RoomType {
     private String Name;
     private String Description;
     private int Capacity;
+
+
     @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<RoomSeason> roomSeasons = new HashSet<>();
+
 
     public RoomType() {
 
