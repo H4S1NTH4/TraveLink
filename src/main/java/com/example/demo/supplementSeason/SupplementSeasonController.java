@@ -1,5 +1,6 @@
 package com.example.demo.supplementSeason;
 
+import com.example.demo.roomSeason.RoomSeason;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,13 @@ public class SupplementSeasonController {
         return ResponseEntity.ok().body(supplementSeason);
     }
 
+    //Get all by seasonId
+    @GetMapping("/bySeason/{seasonId}")
+    public ResponseEntity<List<SupplementSeason>> getSupplementSeasonsBySeasonId(@PathVariable("seasonId") Long seasonId){
+        List<SupplementSeason> supplementSeasons  = supplementSeasonService.getSupplementSeasonsBySeasonId(seasonId);
+        return ResponseEntity.ok(supplementSeasons);
+
+    }
     @PostMapping("/supplement/{supplementId}/season/{seasonId}")
     public ResponseEntity<SupplementSeason> addSupplementToSeason(
             @PathVariable long supplementId,

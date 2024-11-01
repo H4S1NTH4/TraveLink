@@ -1,5 +1,6 @@
 package com.example.demo.supplementSeason;
 
+import com.example.demo.roomSeason.RoomSeason;
 import com.example.demo.season.Season;
 import com.example.demo.season.SeasonRepository;
 import com.example.demo.supplement.Supplement;
@@ -76,4 +77,12 @@ public class SupplementSeasonService {
         supplementSeasonRepository.deleteById(supplementSeasonId);
     }
 
+    public List<SupplementSeason> getSupplementSeasonsBySeasonId(Long season_Id) {
+        Season season = seasonRepository.findById(season_Id)
+                .orElseThrow(()-> new IllegalArgumentException("Season not found with Id: "+season_Id));
+
+        List<SupplementSeason> supplementSeasons= supplementSeasonRepository.findSupplementSeasonsBySeasonId(season_Id);
+        return supplementSeasons;
+
+    }
 }
