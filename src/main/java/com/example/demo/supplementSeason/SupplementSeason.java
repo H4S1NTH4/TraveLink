@@ -67,6 +67,13 @@ public class SupplementSeason {
         this.price = price;
     }
 
+    public Long getSupplementSeasonId() {
+        return supplementSeasonId;
+    }
+
+    public void setSupplementSeasonId(Long supplementSeasonId) {
+        this.supplementSeasonId = supplementSeasonId;
+    }
 
 
     public Set<BookingSupplement> getBookingSupplements() {

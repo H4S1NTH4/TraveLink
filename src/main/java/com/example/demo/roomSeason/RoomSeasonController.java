@@ -3,6 +3,7 @@ package com.example.demo.roomSeason;
 import com.example.demo.room_type.RoomType;
 import com.example.demo.room_type.RoomTypeController;
 import com.example.demo.room_type.RoomTypeService;
+import com.example.demo.season.Season;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,14 @@ public class RoomSeasonController {
         RoomSeason roomSeason= roomSeasonService.getRoomSeasonById(roomSeasonId);
         return ResponseEntity.ok(roomSeason);
     }
+    //Get all by seasonId
+    @GetMapping("/bySeason/{seasonId}")
+    public ResponseEntity<List<RoomSeason>> getRoomSeasonsBySeasonId(@PathVariable("seasonId") Long seasonId){
+        List<RoomSeason> roomSeasons  = roomSeasonService.getRoomSeasonsBySeasonId(seasonId);
+        return ResponseEntity.ok(roomSeasons);
+
+    }
+
 
     @PostMapping("/roomType/{roomTypeId}/seasons/{seasonId}")
     public ResponseEntity<Void> addRoomTypesToSeason(

@@ -1,4 +1,5 @@
 package com.example.demo.roomSeason;
+import com.example.demo.contract.Contract;
 import com.example.demo.hotel.Hotel;
 import com.example.demo.room_type.RoomType;
 import com.example.demo.room_type.RoomTypeRepository;
@@ -78,5 +79,14 @@ public class RoomSeasonService {
             throw new IllegalStateException("RoomSeason with id " + roomSeasonId + " not found");
         }
         roomSeasonRepository.deleteById(roomSeasonId);
+    }
+
+    public List<RoomSeason> getRoomSeasonsBySeasonId(Long season_Id) {
+         Season season = seasonRepository.findById(season_Id)
+                    .orElseThrow(()-> new IllegalArgumentException("Season not found with Id: "+season_Id));
+
+            List<RoomSeason> roomSeasons= roomSeasonRepository.findRoomSeasonsBySeasonId(season_Id);
+            return roomSeasons;
+
     }
 }
