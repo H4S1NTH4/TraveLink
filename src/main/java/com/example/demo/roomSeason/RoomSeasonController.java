@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 @RestController
@@ -38,6 +39,13 @@ public class RoomSeasonController {
     @GetMapping("/bySeason/{seasonId}")
     public ResponseEntity<List<RoomSeason>> getRoomSeasonsBySeasonId(@PathVariable("seasonId") Long seasonId){
         List<RoomSeason> roomSeasons  = roomSeasonService.getRoomSeasonsBySeasonId(seasonId);
+        return ResponseEntity.ok(roomSeasons);
+    }
+    @GetMapping("/availableByHotel/{hotel_Id}")
+    public ResponseEntity<List<RoomSeason>> findAvailableRoomSeasons(@PathVariable Long hotel_Id,
+                                                                     @RequestParam LocalDate checkInDate,
+                                                                     @RequestParam LocalDate checkOutDate){
+        List<RoomSeason> roomSeasons  = roomSeasonService.findAvailableRoomSeasons(hotel_Id,checkInDate,checkOutDate) ;
         return ResponseEntity.ok(roomSeasons);
 
     }

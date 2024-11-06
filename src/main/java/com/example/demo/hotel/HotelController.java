@@ -1,6 +1,7 @@
 package com.example.demo.hotel;
 
 import com.example.demo.hotel.dto.HotelCreateDTO;
+import com.example.demo.hotel.dto.HotelDTO;
 import com.example.demo.hotel.dto.HotelUpdateRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -33,12 +34,14 @@ public class HotelController {
     }
 
     @GetMapping("/search")
-    public List<Hotel> searchHotels(@RequestParam int guestCount,
+    public ResponseEntity<List<HotelDTO>> searchHotels(@RequestParam int guestCount,
                                     @RequestParam LocalDate checkInDate,
                                     @RequestParam LocalDate checkOutDate,
                                     @RequestParam(required = false) String location
                                     ){
-        return hotelService.findAvailableHotels(guestCount, checkInDate,checkOutDate, location);
+        System.out.println("passed params"+guestCount+checkInDate+checkOutDate+location);
+        List<HotelDTO> availableHotels= hotelService.findAvailableHotels(guestCount, checkInDate,checkOutDate, location);
+        return ResponseEntity.ok(availableHotels);
     }
 
     @PostMapping

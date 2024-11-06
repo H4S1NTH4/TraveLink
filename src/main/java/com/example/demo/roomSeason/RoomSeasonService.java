@@ -1,6 +1,7 @@
 package com.example.demo.roomSeason;
 import com.example.demo.contract.Contract;
 import com.example.demo.hotel.Hotel;
+import com.example.demo.hotel.HotelRepository;
 import com.example.demo.room_type.RoomType;
 import com.example.demo.room_type.RoomTypeRepository;
 import com.example.demo.season.Season;
@@ -9,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -17,12 +19,14 @@ public class RoomSeasonService {
     private final RoomSeasonRepository roomSeasonRepository;
     private final RoomTypeRepository roomtypeRepository;
     private final SeasonRepository seasonRepository;
+    private final HotelRepository hotelRepository;
 
     @Autowired
-    public RoomSeasonService(RoomSeasonRepository roomSeasonRepository, RoomTypeRepository roomtypeRepository, SeasonRepository seasonRepository) {
+    public RoomSeasonService(RoomSeasonRepository roomSeasonRepository, RoomTypeRepository roomtypeRepository, SeasonRepository seasonRepository, HotelRepository hotelRepository) {
         this.roomSeasonRepository = roomSeasonRepository;
         this.roomtypeRepository = roomtypeRepository;
         this.seasonRepository = seasonRepository;
+        this.hotelRepository = hotelRepository;
     }
 
     @Transactional
@@ -81,12 +85,22 @@ public class RoomSeasonService {
         roomSeasonRepository.deleteById(roomSeasonId);
     }
 
+    //get available room seasons when booking
     public List<RoomSeason> getRoomSeasonsBySeasonId(Long season_Id) {
          Season season = seasonRepository.findById(season_Id)
                     .orElseThrow(()-> new IllegalArgumentException("Season not found with Id: "+season_Id));
 
             List<RoomSeason> roomSeasons= roomSeasonRepository.findRoomSeasonsBySeasonId(season_Id);
             return roomSeasons;
+
+    }
+
+    public List<RoomSeason> findAvailableRoomSeasons(Long hotel_Id, LocalDate checkInDate, LocalDate checkOutDate) {
+        Hotel hotel = hotelRepository.findById(hotel_Id)
+                .orElseThrow(() -> new IllegalStateException("Hotel with id " + hotel_Id + " not found"));
+
+        List<RoomSeason> roomSeasons= roomSeasonRepository.findAvailableRoomSeasons(hotel_Id, checkInDate, checkOutDate);
+        return roomSeasons;
 
     }
 }
