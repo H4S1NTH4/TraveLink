@@ -95,7 +95,8 @@ public class RoomSeasonService {
 
     }
 
-    public List<RoomSeason> findAvailableRoomSeasons(Long hotel_Id, LocalDate checkInDate, LocalDate checkOutDate) {
+    public List<RoomSeason> findAvailableRoomSeasons(Long hotel_Id, LocalDate checkInDate, LocalDate checkOutDate, int guestCount) {
+        System.out.println("guest count="+guestCount);
         Hotel hotel = hotelRepository.findById(hotel_Id)
                 .orElseThrow(() -> new IllegalStateException("Hotel with id " + hotel_Id + " not found"));
 

@@ -1,5 +1,6 @@
 package com.example.demo.room_type;
 
+import com.example.demo.bookingRoomType.BookingRoomType;
 import com.example.demo.roomSeason.RoomSeason;
 import com.example.demo.season.Season;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,6 +24,9 @@ public class RoomType {
     @JsonIgnore
     private Set<RoomSeason> roomSeasons = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "roomType", cascade = CascadeType.ALL)
+    private Set<BookingRoomType> bookingRoomTypes = new HashSet<>();
 
     public RoomType() {
 
@@ -75,5 +79,15 @@ public class RoomType {
     public Set<RoomSeason> getRoomSeasons() {
         return roomSeasons;
     }
+    public Set<BookingRoomType> getBookingRoomTypes() {
+        return bookingRoomTypes;
+    }
 
+    public void setBookingRoomTypes(Set<BookingRoomType> bookingRoomTypes) {
+        this.bookingRoomTypes = bookingRoomTypes;
+    }
+
+    public void setRoomSeasons(Set<RoomSeason> roomSeasons) {
+        this.roomSeasons = roomSeasons;
+    }
 }

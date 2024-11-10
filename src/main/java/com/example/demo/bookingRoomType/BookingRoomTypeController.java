@@ -1,5 +1,6 @@
 package com.example.demo.bookingRoomType;
 
+import com.example.demo.bookingRoomType.DTO.BookingRoomTypeCreateDTO;
 import com.example.demo.roomSeason.RoomSeason;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +25,11 @@ public class BookingRoomTypeController {
         return bookingRoomTypeService.getBookingRoomTypes();
     }
     
-    @PostMapping("/booking/{bookingId}/roomSeason/{roomSeasonId}")
-    public ResponseEntity<BookingRoomType> createBookingRoomType(@PathVariable Long bookingId,
-                                                                 @PathVariable Long roomSeasonId,
-                                                                 @RequestBody BookingRoomType bookingRoomType) {
+    @PostMapping("/booking/{bookingId}")
+    public ResponseEntity<List<BookingRoomType>> createBookingRoomType(@PathVariable Long bookingId,
+                                                                 @RequestBody List<BookingRoomTypeCreateDTO> bookingRoomTypesDTO) {
 
-        return bookingRoomTypeService.createBookingRoomType(bookingId, roomSeasonId, bookingRoomType);
+        return bookingRoomTypeService.createBookingRoomType(bookingId,bookingRoomTypesDTO);
     }
 
 

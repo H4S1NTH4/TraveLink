@@ -1,7 +1,7 @@
 package com.example.demo.hotel.dto;
 
 public class HotelDTO {
-    private Long hotelId;
+    private Long hotel_Id;
     private String name;
     private String city;
     private String country;
@@ -11,7 +11,7 @@ public class HotelDTO {
 
     // Constructor
     public HotelDTO(Long hotelId, String name, String city, String country, Integer starRating, String imageUrl, String description) {
-        this.hotelId = hotelId;
+        this.hotel_Id = hotelId;
         this.name = name;
         this.city = city;
         this.country = country;
@@ -21,12 +21,12 @@ public class HotelDTO {
     }
 
     // Getters and Setters
-    public Long getHotelId() {
-        return hotelId;
+    public Long getHotel_Id() {
+        return hotel_Id;
     }
 
-    public void setHotelId(Long hotelId) {
-        this.hotelId = hotelId;
+    public void setHotel_Id(Long hotel_Id) {
+        this.hotel_Id = hotel_Id;
     }
 
     public String getName() {

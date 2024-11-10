@@ -44,8 +44,9 @@ public class RoomSeasonController {
     @GetMapping("/availableByHotel/{hotel_Id}")
     public ResponseEntity<List<RoomSeason>> findAvailableRoomSeasons(@PathVariable Long hotel_Id,
                                                                      @RequestParam LocalDate checkInDate,
-                                                                     @RequestParam LocalDate checkOutDate){
-        List<RoomSeason> roomSeasons  = roomSeasonService.findAvailableRoomSeasons(hotel_Id,checkInDate,checkOutDate) ;
+                                                                     @RequestParam LocalDate checkOutDate,
+                                                                     @RequestParam int guestCount){
+        List<RoomSeason> roomSeasons  = roomSeasonService.findAvailableRoomSeasons(hotel_Id,checkInDate,checkOutDate,guestCount) ;
         return ResponseEntity.ok(roomSeasons);
 
     }

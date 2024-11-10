@@ -49,7 +49,7 @@ BookedCapacity AS (
         Booking_Room_Type brt ON brt.room_season_id = rs.room_season_id
     WHERE
         brt.checkin_date < :checkOutDate
-        AND brt.checkout_date > :checkInDate
+        AND brt.check_out_date > :checkInDate
     GROUP BY
         sc.season_id
 ),
