@@ -1,10 +1,13 @@
 package com.example.demo.supplementSeason;
 
+import com.example.demo.roomSeason.DTO.RoomSeasonSummaryDTO;
 import com.example.demo.roomSeason.RoomSeason;
+import com.example.demo.supplementSeason.DTO.SupplementSeasonSummaryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -38,6 +41,15 @@ public class SupplementSeasonController {
         return ResponseEntity.ok(supplementSeasons);
 
     }
+    @GetMapping("/availableByHotel/{hotel_Id}")
+    public ResponseEntity<List<SupplementSeasonSummaryDTO>> findAvailableRoomSeasons(@PathVariable Long hotel_Id,
+                                                                               @RequestParam LocalDate checkInDate,
+                                                                               @RequestParam LocalDate checkOutDate){
+        List<SupplementSeasonSummaryDTO> supplementSeasons  = supplementSeasonService.findAvailableSupplementSeasons(hotel_Id,checkInDate,checkOutDate) ;
+        return ResponseEntity.ok(supplementSeasons);
+
+    }
+
     @PostMapping("/supplement/{supplementId}/season/{seasonId}")
     public ResponseEntity<SupplementSeason> addSupplementToSeason(
             @PathVariable long supplementId,

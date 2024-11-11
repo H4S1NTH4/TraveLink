@@ -1,5 +1,6 @@
 package com.example.demo.roomSeason;
 
+import com.example.demo.roomSeason.DTO.RoomSeasonSummaryDTO;
 import com.example.demo.room_type.RoomType;
 import com.example.demo.room_type.RoomTypeController;
 import com.example.demo.room_type.RoomTypeService;
@@ -42,11 +43,11 @@ public class RoomSeasonController {
         return ResponseEntity.ok(roomSeasons);
     }
     @GetMapping("/availableByHotel/{hotel_Id}")
-    public ResponseEntity<List<RoomSeason>> findAvailableRoomSeasons(@PathVariable Long hotel_Id,
-                                                                     @RequestParam LocalDate checkInDate,
-                                                                     @RequestParam LocalDate checkOutDate,
-                                                                     @RequestParam int guestCount){
-        List<RoomSeason> roomSeasons  = roomSeasonService.findAvailableRoomSeasons(hotel_Id,checkInDate,checkOutDate,guestCount) ;
+    public ResponseEntity<List<RoomSeasonSummaryDTO>> findAvailableRoomSeasons(@PathVariable Long hotel_Id,
+                                                                               @RequestParam LocalDate checkInDate,
+                                                                               @RequestParam LocalDate checkOutDate,
+                                                                               @RequestParam int guestCount){
+        List<RoomSeasonSummaryDTO> roomSeasons  = roomSeasonService.findAvailableRoomSeasons(hotel_Id,checkInDate,checkOutDate,guestCount) ;
         return ResponseEntity.ok(roomSeasons);
 
     }
