@@ -19,17 +19,13 @@ public class RoomSeason {
     private Long RoomSeasonId;
 
     @ManyToOne
-    @JoinColumn(name = "roomTypeId", nullable = false)
+    @JoinColumn(name = "room_type_id", nullable = false)
     private RoomType roomType;
 
     @ManyToOne
     @JoinColumn(name = "season_Id", nullable = false)
     @JsonIgnore
     private Season season;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "roomSeason", cascade = CascadeType.ALL)
-    private Set<BookingRoomType> bookingRoomTypes = new HashSet<>();
 
     @ManyToOne
     @JsonIgnore
@@ -88,13 +84,6 @@ public class RoomSeason {
         this.quantity = quantity;
     }
 
-    public Set<BookingRoomType> getBookingRoomTypes() {
-        return bookingRoomTypes;
-    }
-
-    public void setBookingRoomTypes(Set<BookingRoomType> bookingRoomTypes) {
-        this.bookingRoomTypes = bookingRoomTypes;
-    }
     public Hotel getHotel() {
         return hotel;
     }

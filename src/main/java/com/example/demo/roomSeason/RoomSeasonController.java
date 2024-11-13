@@ -1,13 +1,16 @@
 package com.example.demo.roomSeason;
 
+import com.example.demo.roomSeason.DTO.RoomSeasonSummaryDTO;
 import com.example.demo.room_type.RoomType;
 import com.example.demo.room_type.RoomTypeController;
 import com.example.demo.room_type.RoomTypeService;
+import com.example.demo.season.Season;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 @RestController
@@ -33,6 +36,22 @@ public class RoomSeasonController {
         RoomSeason roomSeason= roomSeasonService.getRoomSeasonById(roomSeasonId);
         return ResponseEntity.ok(roomSeason);
     }
+    //Get all by seasonId
+    @GetMapping("/bySeason/{seasonId}")
+    public ResponseEntity<List<RoomSeason>> getRoomSeasonsBySeasonId(@PathVariable("seasonId") Long seasonId){
+        List<RoomSeason> roomSeasons  = roomSeasonService.getRoomSeasonsBySeasonId(seasonId);
+        return ResponseEntity.ok(roomSeasons);
+    }
+    @GetMapping("/availableByHotel/{hotel_Id}")
+    public ResponseEntity<List<RoomSeasonSummaryDTO>> findAvailableRoomSeasons(@PathVariable Long hotel_Id,
+                                                                               @RequestParam LocalDate checkInDate,
+                                                                               @RequestParam LocalDate checkOutDate,
+                                                                               @RequestParam int guestCount){
+        List<RoomSeasonSummaryDTO> roomSeasons  = roomSeasonService.findAvailableRoomSeasons(hotel_Id,checkInDate,checkOutDate,guestCount) ;
+        return ResponseEntity.ok(roomSeasons);
+
+    }
+
 
     @PostMapping("/roomType/{roomTypeId}/seasons/{seasonId}")
     public ResponseEntity<Void> addRoomTypesToSeason(

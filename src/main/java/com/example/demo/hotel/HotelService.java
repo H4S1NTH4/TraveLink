@@ -1,6 +1,7 @@
 package com.example.demo.hotel;
 
 import com.example.demo.hotel.dto.HotelCreateDTO;
+import com.example.demo.hotel.dto.HotelDTO;
 import com.example.demo.hotel.dto.HotelUpdateRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service   // we can use @component annotation too.
 public class HotelService {
@@ -33,8 +35,17 @@ public class HotelService {
         return hotelRepository.findAll();
         }
 
-    public List<Hotel> findAvailableHotels(int guestCount, LocalDate checkInDate, LocalDate checkOutDate, String location) {
-    return hotelRepository.findAvailableHotels(guestCount,checkInDate, checkOutDate,location);
+    public List<HotelDTO> findAvailableHotels(int guestCount, LocalDate checkInDate, LocalDate checkOutDate, String location) {
+     List<Hotel> hotels = hotelRepository.findAvailableHotels(guestCount,checkInDate, checkOutDate,location);
+     return hotels.stream()
+             .map(hotel -> new HotelDTO(
+                     hotel.getHotel_Id(),
+                     hotel.getName(),
+                     hotel.getCity(),
+                     hotel.getCountry(),
+                     hotel.getStarRating(),
+                     hotel.getImageUrl(),
+                     hotel.getDescription())).collect(Collectors.toList());
     }
 
     public ResponseEntity<?> addNewHotel(HotelCreateDTO hotelCreateDTO) {

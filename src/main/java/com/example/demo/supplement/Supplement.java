@@ -1,9 +1,10 @@
 package com.example.demo.supplement;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.demo.supplementSeason.SupplementSeason;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
 public class Supplement {
@@ -11,6 +12,11 @@ public class Supplement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long supplement_Id;
+
+    @OneToMany(mappedBy = "supplement", cascade = CascadeType.ALL , orphanRemoval = true)
+    @JsonIgnore
+    private Set<SupplementSeason> supplementSeason;
+
 
     private String supplementName;
     private String supplementDescription;
@@ -51,5 +57,13 @@ public class Supplement {
 
     public void setSupplementDescription(String supplyDescription) {
         this.supplementDescription = supplyDescription;
+    }
+
+    public Set<SupplementSeason> getSupplementSeason() {
+        return supplementSeason;
+    }
+
+    public void setSupplementSeason(Set<SupplementSeason> supplementSeason) {
+        this.supplementSeason = supplementSeason;
     }
 }

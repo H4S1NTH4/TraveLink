@@ -3,7 +3,6 @@ package com.example.demo.bookingRoomType;
 import com.example.demo.booking.Booking;
 import com.example.demo.roomSeason.RoomSeason;
 import com.example.demo.room_type.RoomType;
-import com.example.demo.season.Season;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -17,15 +16,19 @@ public class BookingRoomType {
     private Long brt_Id;
 
     private String roomTypeName; //from roomType tbl
-    private double roomPrice;   //from roomSeason tbl
+    private double roomPrice;   //from tbl
     private int quantity;
-    private int guestCount;
     private LocalDate checkinDate;
-    private LocalDate checkoutDate;
+    private LocalDate checkOutDate;
     private int capacity;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {})
-    @JoinColumn(name = "room_season_Id", nullable = false)
+    @JoinColumn(name = "room_type_id", nullable = false)
+    @JsonIgnore
+    private RoomType roomType;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {})
+    @JoinColumn(name = "room_season_id", nullable = false)
     @JsonIgnore
     private RoomSeason roomSeason;
 
@@ -37,13 +40,14 @@ public class BookingRoomType {
     public BookingRoomType() {
     }
 
-    public BookingRoomType(int quantity, double roomPrice,int guestCount, LocalDate checkinDate, LocalDate checkoutDate, String roomTypeName) {
+    public BookingRoomType(int quantity, double roomPrice, LocalDate checkinDate, LocalDate checkoutDate, String roomTypeName,int capacity, RoomType roomType) {
         this.quantity = quantity;
         this.roomPrice = roomPrice;
-        this.guestCount = guestCount;
         this.checkinDate = checkinDate;
-        this.checkoutDate = checkoutDate;
+        this.checkOutDate = checkoutDate;
         this.roomTypeName = roomTypeName;
+        this.capacity = capacity;
+        this.roomType = roomType;
     }
 
     public Long getBrt_Id() {
@@ -61,25 +65,13 @@ public class BookingRoomType {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-    public int getCapacity() {
-        return capacity;
-    }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
     public double getRoomPrice() {
         return roomPrice;
     }
 
     public void setRoomPrice(double roomPrice) {
         this.roomPrice = roomPrice;
-    }
-    public int getGuestCount() {
-        return guestCount;
-    }
-    public void setGuestCount(int guestCount) {
-        this.guestCount = guestCount;
     }
 
     public LocalDate getCheckinDate() {
@@ -90,12 +82,12 @@ public class BookingRoomType {
         this.checkinDate = checkinDate;
     }
 
-    public LocalDate getCheckoutDate() {
-        return checkoutDate;
+    public LocalDate getCheckOutDate() {
+        return checkOutDate;
     }
 
-    public void setCheckoutDate(LocalDate checkoutDate) {
-        this.checkoutDate = checkoutDate;
+    public void setCheckOutDate(LocalDate checkoutDate) {
+        this.checkOutDate = checkoutDate;
     }
     public String getRoomTypeName() {
         return roomTypeName;
@@ -105,12 +97,12 @@ public class BookingRoomType {
         this.roomTypeName = roomTypeName;
     }
 
-    public RoomSeason getRoomSeason() {
-        return roomSeason;
+    public RoomType getRoomType() {
+        return roomType;
     }
 
-    public void setRoomSeason(RoomSeason roomSeason) {
-        this.roomSeason = roomSeason;
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
     }
 
     public Booking getBooking() {
@@ -119,5 +111,21 @@ public class BookingRoomType {
 
     public void setBooking(Booking booking) {
         this.booking = booking;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public RoomSeason getRoomSeason() {
+        return roomSeason;
+    }
+
+    public void setRoomSeason(RoomSeason roomSeason) {
+        this.roomSeason = roomSeason;
     }
 }
