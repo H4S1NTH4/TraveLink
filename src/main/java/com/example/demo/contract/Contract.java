@@ -1,5 +1,6 @@
 package com.example.demo.contract;
 
+import com.example.demo.discount.Discount;
 import com.example.demo.hotel.Hotel;
 import com.example.demo.season.Season;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,6 +25,9 @@ public class Contract {
 
     @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Season> seasons = new HashSet<>();
+
+    @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
+    private Set<Discount> discounts = new HashSet<>();
 
     LocalDate startDate;
     LocalDate endDate;
@@ -140,4 +144,16 @@ public class Contract {
     }
 
     public Set<Season> getSeasons() { return seasons; }
+
+    public Set<Discount> getDiscounts() {
+        return discounts;
+    }
+
+    public void setDiscounts(Set<Discount> discounts) {
+        this.discounts = discounts;
+    }
+
+    public void setSeasons(Set<Season> seasons) {
+        this.seasons = seasons;
+    }
 }

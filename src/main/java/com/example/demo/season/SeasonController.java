@@ -36,7 +36,6 @@ public class SeasonController {
     public ResponseEntity<List<Season>> getSeasonsByContractId(@PathVariable("contract_Id") Long contract_Id){
         List<Season> seasons  = seasonService.getSeasonsByContractId(contract_Id);
         return ResponseEntity.ok(seasons);
-
     }
     @PostMapping
     public ResponseEntity<?> createSeason(@RequestBody Season season, @RequestParam Long contract_Id) {
