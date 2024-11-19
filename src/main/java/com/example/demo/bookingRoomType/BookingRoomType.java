@@ -1,7 +1,6 @@
 package com.example.demo.bookingRoomType;
 
 import com.example.demo.booking.Booking;
-import com.example.demo.roomSeason.RoomSeason;
 import com.example.demo.room_type.RoomType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -17,20 +16,21 @@ public class BookingRoomType {
 
     private String roomTypeName; //from roomType tbl
     private double roomPrice;   //from tbl
-    private int quantity;
+    private int quantity; // no of rooms from the room type
     private LocalDate checkinDate;
     private LocalDate checkOutDate;
-    private int capacity;
+    private int guestCount; // total guest count for the room type
+    private int numberOfDays;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = "room_type_id", nullable = false)
     @JsonIgnore
     private RoomType roomType;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {})
-    @JoinColumn(name = "room_season_id", nullable = false)
-    @JsonIgnore
-    private RoomSeason roomSeason;
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = {})
+//    @JoinColumn(name = "room_season_id", nullable = false)
+//    @JsonIgnore
+//    private RoomSeason roomSeason;
 
     @ManyToOne
     @JoinColumn(name = "booking_Id", nullable = false)
@@ -40,14 +40,15 @@ public class BookingRoomType {
     public BookingRoomType() {
     }
 
-    public BookingRoomType(int quantity, double roomPrice, LocalDate checkinDate, LocalDate checkoutDate, String roomTypeName,int capacity, RoomType roomType) {
+    public BookingRoomType(int quantity, double roomPrice, LocalDate checkinDate, LocalDate checkoutDate, String roomTypeName, int guestCount, RoomType roomType,int numberOfDays) {
         this.quantity = quantity;
         this.roomPrice = roomPrice;
         this.checkinDate = checkinDate;
         this.checkOutDate = checkoutDate;
         this.roomTypeName = roomTypeName;
-        this.capacity = capacity;
+        this.guestCount = guestCount;
         this.roomType = roomType;
+        this.numberOfDays = numberOfDays;
     }
 
     public Long getBrt_Id() {
@@ -113,19 +114,27 @@ public class BookingRoomType {
         this.booking = booking;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public int getGuestCount() {
+        return guestCount;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void setGuestCount(int capacity) {
+        this.guestCount = capacity;
     }
 
-    public RoomSeason getRoomSeason() {
-        return roomSeason;
+    public int getNumberOfDays() {
+        return numberOfDays;
     }
 
-    public void setRoomSeason(RoomSeason roomSeason) {
-        this.roomSeason = roomSeason;
+    public void setNumberOfDays(int numberOfDays) {
+        this.numberOfDays = numberOfDays;
     }
+
+    //    public RoomSeason getRoomSeason() {
+//        return roomSeason;
+//    }
+//
+//    public void setRoomSeason(RoomSeason roomSeason) {
+//        this.roomSeason = roomSeason;
+//    }
 }

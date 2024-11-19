@@ -4,6 +4,7 @@ import com.example.demo.bookingRoomType.BookingRoomType;
 import com.example.demo.bookingSupplement.BookingSupplement;
 import com.example.demo.hotel.Hotel;
 import com.example.demo.roomSeason.RoomSeason;
+import com.example.demo.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -20,12 +21,14 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
 
-    int guestCount;
-    LocalDate bookingDate;
-    float totalAmount;
-    float totalDiscount;
-    //float balancePayment;
-    // float paidAmount;
+    private int guestCount;
+    private LocalDate bookingDate;
+    private float totalAmount;
+    private float totalDiscount;
+    private float paidAmount;
+    private float balancePayment;
+    private LocalDate checkInDate;
+    private LocalDate checkOutDate;
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private Set<BookingRoomType> bookingRoomTypes = new HashSet<>();
@@ -33,12 +36,16 @@ public class Booking {
     @OneToMany(mappedBy = "booking")
     private Set<BookingSupplement> bookingSupplements = new HashSet<>();
 
-
-
     @ManyToOne
     @JoinColumn(name = "hotel_Id")
     @JsonIgnoreProperties("contracts")
     private Hotel hotel;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
+
 
     public Booking() {
     }
@@ -105,7 +112,8 @@ public class Booking {
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
     }
-   /* public float getBalancePayment() { return balancePayment;    }
+
+    public float getBalancePayment() { return balancePayment;    }
 
     public void setBalancePayment(float balancePayment) { this.balancePayment = balancePayment;   }
 
@@ -113,6 +121,27 @@ public class Booking {
 
     public void setPaidAmount(float paidAmount) { this.paidAmount = paidAmount; }
 
-    */
+    public LocalDate getCheckInDate() {
+        return checkInDate;
+    }
 
+    public void setCheckInDate(LocalDate checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public LocalDate getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    public void setCheckOutDate(LocalDate checkOutDate) {
+        this.checkOutDate = checkOutDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

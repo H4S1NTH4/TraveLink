@@ -3,7 +3,6 @@ package com.example.demo.bookingRoomType;
 import com.example.demo.booking.Booking;
 import com.example.demo.booking.BookingRepository;
 import com.example.demo.bookingRoomType.DTO.BookingRoomTypeCreateDTO;
-import com.example.demo.roomSeason.RoomSeason;
 import com.example.demo.roomSeason.RoomSeasonRepository;
 import com.example.demo.room_type.RoomType;
 import com.example.demo.room_type.RoomTypeRepository;
@@ -56,19 +55,20 @@ public class BookingRoomTypeService {
             RoomType roomType = roomTypeRepository.findById(dto.getRoomTypeId())
                             .orElseThrow(() -> new IllegalStateException("Room type with id " + dto.getRoomTypeId() + " not found"));
 
-            RoomSeason roomSeason = roomSeasonRepository.findById(dto.getRoomSeasonId())
-                    .orElseThrow(() -> new IllegalStateException("Room season with id " + dto.getRoomSeasonId() + " not found"));
+//            RoomSeason roomSeason = roomSeasonRepository.findById(dto.getRoomSeasonId())
+//                    .orElseThrow(() -> new IllegalStateException("Room season with id " + dto.getRoomSeasonId() + " not found"));
 
             bookingRoomType.setBooking(booking);
             bookingRoomType.setCheckinDate(dto.getCheckinDate());
             bookingRoomType.setCheckOutDate(dto.getCheckoutDate());
 
-            bookingRoomType.setRoomSeason(roomSeason);
+//            bookingRoomType.setRoomSeason(roomSeason);
             bookingRoomType.setRoomType(roomType);
             bookingRoomType.setRoomTypeName(roomType.getName());
-            bookingRoomType.setCapacity(roomType.getCapacity());
+            bookingRoomType.setGuestCount(dto.getGuestCount());
             bookingRoomType.setRoomPrice(dto.getRoomPrice());
             bookingRoomType.setQuantity(dto.getQuantity());
+            bookingRoomType.setNumberOfDays(dto.getNumberOfDays());
 
             bookingRoomTypes.add(bookingRoomTypeRepository.save(bookingRoomType));
         }

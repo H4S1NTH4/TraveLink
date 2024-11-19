@@ -2,13 +2,14 @@ package com.example.demo.bookingSupplement;
 
 import com.example.demo.booking.Booking;
 import com.example.demo.season.Season;
+import com.example.demo.supplement.Supplement;
 import com.example.demo.supplementSeason.SupplementSeason;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "booking_supplement")
-public class BookingSupplement {
+public class  BookingSupplement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingSupplementId;
@@ -18,10 +19,16 @@ public class BookingSupplement {
     private int supplementQuantity;
     private int noOfDays;
 
+//    @ManyToOne
+//    @JoinColumn(name="supplement_season_Id", nullable = false)
+//    @JsonIgnore
+//    private SupplementSeason supplementSeason;
+
     @ManyToOne
-    @JoinColumn(name="supplement_season_Id", nullable = false)
+    @JoinColumn(name="supplement_id", nullable = false)
     @JsonIgnore
-    private SupplementSeason supplementSeason;
+    private Supplement supplement;
+
 
     @ManyToOne
     @JoinColumn(name = "booking_Id", nullable = false)
@@ -78,13 +85,13 @@ public class BookingSupplement {
         this.noOfDays = noOfDays;
     }
 
-    public SupplementSeason getSupplementSeason() {
-        return supplementSeason;
-    }
-
-    public void setSupplementSeason(SupplementSeason supplementSeason) {
-        this.supplementSeason = supplementSeason;
-    }
+//    public SupplementSeason getSupplementSeason() {
+//        return supplementSeason;
+//    }
+//
+//    public void setSupplementSeason(SupplementSeason supplementSeason) {
+//        this.supplementSeason = supplementSeason;
+//    }
 
     public Booking getBooking() {
         return booking;
@@ -92,5 +99,13 @@ public class BookingSupplement {
 
     public void setBooking(Booking booking) {
         this.booking = booking;
+    }
+
+    public Supplement getSupplement() {
+        return supplement;
+    }
+
+    public void setSupplement(Supplement supplement) {
+        this.supplement = supplement;
     }
 }
