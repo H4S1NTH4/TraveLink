@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping(path = "api/v1/discount")
 public class DiscountController {
@@ -42,8 +44,15 @@ public class DiscountController {
                                                                 @RequestParam LocalDate checkOutDate,
                                                                @RequestParam double bookingCost){
 
-        Discount discount  = discountService.getAvailableDiscount(hotelId,checkInDate,checkOutDate,bookingCost);
-        return ResponseEntity.ok(discount);
+//        Discount discount  = discountService.getAvailableDiscount(hotelId,checkInDate,checkOutDate,bookingCost);
+//        return ResponseEntity.ok(discount);
+
+        // Get the discount wrapped in an Optional
+        Optional<Discount> optionalDiscount = discountService.getAvailableDiscount(hotelId, checkInDate, checkOutDate, bookingCost);
+
+        // If the discount is present, return it; otherwise, return 404 Not Found or another appropriate response
+        return optionalDiscount.map(discount -> ResponseEntity.ok(discount))
+                .orElseGet(() -> ResponseEntity.noContent().build()); // No content if no discount is available
 
     }
 

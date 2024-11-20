@@ -1,5 +1,6 @@
 package com.example.demo.booking;
 import com.example.demo.booking.DTO.BookingRequestDTO;
+import com.example.demo.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,13 @@ public class BookingController {
         return bookingService.getBookings();
     }
 
+    //get bookings by userId
+    @GetMapping("/user/{userId}")
+    public List<Booking> getBookingsByUserId(@PathVariable Long userId) {
+
+        return bookingService.getBookingsByUserId(userId);
+    }
+
     //createBooking
     @PostMapping("/hotel/{hotelId}/user/{userId}")
     public ResponseEntity<Booking> createBooking(@RequestBody BookingRequestDTO bookingRequestDTO,
@@ -35,6 +43,8 @@ public class BookingController {
         booking.setPaidAmount(bookingRequestDTO.getPaidAmount());
         booking.setBalancePayment(bookingRequestDTO.getBalancePayment());
 
-        return ResponseEntity.ok(bookingService.createBooking(booking,hotelId,userId,bookingRequestDTO.getRoomTypeDTOs()));
+        return ResponseEntity.ok(bookingService.createBooking(booking,hotelId,userId,
+                bookingRequestDTO.getRoomTypeDTOs(),
+                bookingRequestDTO.getSupplementDTOs()));
     }
 }

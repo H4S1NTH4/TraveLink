@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DiscountService {
@@ -76,10 +77,10 @@ public class DiscountService {
         return discounts;
     }
 
-    public Discount getAvailableDiscount(Long hotel_Id,
-                                         LocalDate checkInDate,
-                                         LocalDate checkOutDate,
-                                         double bookingCost) {
+    public Optional<Discount> getAvailableDiscount(Long hotel_Id,
+                                                  LocalDate checkInDate,
+                                                  LocalDate checkOutDate,
+                                                  double bookingCost) {
 
         Contract contract = contractRepository.findMatchingContract(hotel_Id,checkInDate/*,checkOutDate*/)
                 .orElseThrow(()-> new IllegalArgumentException("Contract not found with Id: "));
@@ -98,9 +99,7 @@ public class DiscountService {
                     // Apply the conditions for daysPriorArrival and minBookingCost
                     return daysBetween >= discount.getDaysPriorArrival() && bookingCost >= discount.getMinBookingCost();
                 })
-                .max(Comparator.comparingDouble(Discount::getValue)) // Get the discount with the maximum value
-                .orElseThrow(() -> new IllegalArgumentException("No valid discount found for the given conditions"));
-
+                .max(Comparator.comparingDouble(Discount::getValue)); // Get the discount with the maximum value
     }
 
 

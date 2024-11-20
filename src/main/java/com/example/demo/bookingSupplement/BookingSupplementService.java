@@ -35,14 +35,14 @@ public class BookingSupplementService {
     }
 
     @Transactional
-    public ResponseEntity<List<BookingSupplement>> createBookingSupplement(Long bookingId, List<CreateBookingSupDTO> dtos) {
+    public ResponseEntity<List<BookingSupplement>> createBookingSupplement(Long bookingId, List<CreateBookingSupDTO> supplementDTOs) {
 
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalStateException("Booking with id " + bookingId + "not found"));
 
         List<BookingSupplement> bookingSupplements = new ArrayList<>();
 
-        for(CreateBookingSupDTO dto : dtos) {
+        for(CreateBookingSupDTO dto : supplementDTOs) {
 
             BookingSupplement bookingSupplement = new BookingSupplement();
 

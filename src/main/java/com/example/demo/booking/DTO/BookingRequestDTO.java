@@ -1,5 +1,6 @@
 package com.example.demo.booking.DTO;
 import com.example.demo.bookingRoomType.DTO.BookingRoomTypeCreateDTO;
+import com.example.demo.bookingSupplement.CreateBookingSupDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,6 +14,8 @@ public class BookingRequestDTO {
         private float paidAmount;
         private float balancePayment;
         private List<BookingRoomTypeCreateDTO> roomTypeDTOs;
+        private List<CreateBookingSupDTO> supplementDTOs;
+
 
     public BookingRequestDTO() {}
 
@@ -78,5 +81,13 @@ public class BookingRequestDTO {
 
     public void setRoomTypeDTOs(List<BookingRoomTypeCreateDTO> roomTypeDTOs) {
         this.roomTypeDTOs = roomTypeDTOs;
+    }
+
+    public List<CreateBookingSupDTO> getSupplementDTOs() {
+        return supplementDTOs;
+    }
+
+    public void setSupplementDTOs(List<CreateBookingSupDTO> supplementDTOs) {
+        this.supplementDTOs = supplementDTOs;
     }
 }
