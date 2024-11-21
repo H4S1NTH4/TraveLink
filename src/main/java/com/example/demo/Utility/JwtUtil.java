@@ -15,8 +15,9 @@ public class JwtUtil {
     private String secretKey = "your_secret_key"; // Change this to a secure key
     private long validity = 24 * 60 * 60 * 1000; // 3 hours  hr * min * sec * ms
 
-    public String generateToken(String username) {
+    public String generateToken(String username,Long userId) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId); // Add userId to the claims
         return createToken(claims, username);
     }
 

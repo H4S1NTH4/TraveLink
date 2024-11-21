@@ -1,10 +1,14 @@
 package com.example.demo.discount;
 
+import com.example.demo.season.Season;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping(path = "api/v1/discount")
 public class DiscountController {
@@ -27,10 +31,37 @@ public class DiscountController {
             return ResponseEntity.ok(discount);
         }
 
-        @PostMapping
-        public ResponseEntity<?> createDiscount(@RequestBody Discount discount) {
-            return ResponseEntity.ok(discountService.createDiscount(discount));
+    @GetMapping("/byContract/{contract_Id}")
+    public ResponseEntity<List<Discount>> getDiscountsByContractId(@PathVariable("contract_Id") Long contract_Id){
+        List<Discount> discounts  = discountService.getDiscountsByContractId(contract_Id);
+        return ResponseEntity.ok(discounts);
+
+    }
+
+    @GetMapping("/byHotel/{hotelId}")
+    public ResponseEntity<Discount> getAvailableDiscount(@PathVariable("hotelId") Long hotelId,
+                                                                @RequestParam LocalDate checkInDate,
+                                                                @RequestParam LocalDate checkOutDate,
+                                                               @RequestParam double bookingCost){
+
+//        Discount discount  = discountService.getAvailableDiscount(hotelId,checkInDate,checkOutDate,bookingCost);
+//        return ResponseEntity.ok(discount);
+
+        // Get the discount wrapped in an Optional
+        Optional<Discount> optionalDiscount = discountService.getAvailableDiscount(hotelId, checkInDate, checkOutDate, bookingCost);
+
+        // If the discount is present, return it; otherwise, return 404 Not Found or another appropriate response
+        return optionalDiscount.map(discount -> ResponseEntity.ok(discount))
+                .orElseGet(() -> ResponseEntity.noContent().build()); // No content if no discount is available
+
+    }
+
+    @PostMapping("contractId/{contractId}")
+        public ResponseEntity<?> createDiscount(@RequestBody Discount discount,
+                                                @PathVariable Long contractId) {
+            return ResponseEntity.ok(discountService.createDiscount(discount,contractId));
         }
+
 
         @PutMapping("{discountId}")
         public ResponseEntity<Discount> updateDiscount(@PathVariable Long discountId, @RequestBody Discount discountDetails) {

@@ -1,5 +1,4 @@
 package com.example.demo.roomSeason;
-import com.example.demo.contract.Contract;
 import com.example.demo.hotel.Hotel;
 import com.example.demo.hotel.HotelRepository;
 import com.example.demo.roomSeason.DTO.RoomSeasonSummaryDTO;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -111,7 +109,7 @@ public class RoomSeasonService {
         Map<Long, List<RoomSeason>> groupedByRoomType = roomSeasons.stream()
                 .collect(Collectors.groupingBy(rs -> rs.getRoomType().getRoomTypeId()));
 
-        //Iterate each room type & cal weighted avg price , min qty
+        //Iterate each room type & cal weighted avg price & minimum avail room qty
         List<RoomSeasonSummaryDTO> summaryDTOS = groupedByRoomType.entrySet().stream()
                 .map(entry ->{
                     List<RoomSeason> groupedSeasons = entry.getValue();
@@ -148,7 +146,9 @@ public class RoomSeasonService {
                     }
                     // Calculate the average price by dividing total weighted price by total days in seasons
                     double averagePrice = daysInSeasons > 0 ? totalWeightedPrice / daysInSeasons : 0.0;
+                            averagePrice = Math.round(averagePrice *100)/100.0;
                     double averageMarkup = daysInSeasons> 0 ? totalWeightedMarkup / daysInSeasons : 0.0;
+                    averageMarkup = Math.round(averageMarkup * 100.0) / 100.0;
 
                     // Get the minimum quantity from the grouped room seasons
                     int minQuantity = groupedSeasons.stream()

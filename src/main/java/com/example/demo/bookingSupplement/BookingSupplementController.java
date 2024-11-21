@@ -25,16 +25,12 @@ public class BookingSupplementController {
             return bookingSupplementService.getBookingSupplements();
         }
 
-        @PostMapping("/booking/{bookingId}/supplementSeason/{supplementSeasonId}")
-        public ResponseEntity<BookingSupplement> createBookingSupplement(
+        @PostMapping("/booking/{bookingId}")
+        public ResponseEntity<List<BookingSupplement>> createBookingSupplement(
                 @PathVariable Long bookingId,
-                @PathVariable Long supplementSeasonId,
-                @RequestBody BookingSupplement bookingSupplement ){
+                @RequestBody List<CreateBookingSupDTO> dto ){
 
-            return bookingSupplementService.createBookingSupplement(
-                    bookingId,
-                    supplementSeasonId,
-                    bookingSupplement );
+            return bookingSupplementService.createBookingSupplement(bookingId,dto );
 
             /*
             req body :

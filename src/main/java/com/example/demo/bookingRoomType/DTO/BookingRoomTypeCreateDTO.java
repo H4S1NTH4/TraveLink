@@ -8,20 +8,24 @@ public class BookingRoomTypeCreateDTO {
     private LocalDate checkoutDate;
     private int quantity;
     private double roomPrice;   //from tbl
-
+    private int guestCount;
     private Long roomSeasonId;
+    private int numberOfDays;
 
     // Constructors, Getters, and Setters
 
     public BookingRoomTypeCreateDTO() {}
 
-    public BookingRoomTypeCreateDTO(Long roomTypeId,Long roomSeasonId, LocalDate checkinDate, LocalDate checkoutDate, int quantity, double roomPrice) {
+    public BookingRoomTypeCreateDTO(Long roomTypeId,Long roomSeasonId, LocalDate checkinDate,
+                                    LocalDate checkoutDate, int quantity, double roomPrice, int guestCount ,int numberOfDays) {
         this.roomTypeId = roomTypeId;
         this.roomSeasonId = roomSeasonId;
         this.checkinDate = checkinDate;
         this.checkoutDate = checkoutDate;
         this.quantity = quantity;
         this.roomPrice = roomPrice;
+        this.guestCount = guestCount;
+        this.numberOfDays = numberOfDays;
     }
 
     public Long getRoomTypeId() {
@@ -68,6 +72,22 @@ public class BookingRoomTypeCreateDTO {
 
     public void setRoomSeasonId(Long roomSeasonId) {
         this.roomSeasonId = roomSeasonId;
+    }
+
+    public int getGuestCount() {
+        return guestCount;
+    }
+
+    public void setGuestCount(int guestCount) {
+        this.guestCount = guestCount;
+    }
+
+    public int getNumberOfDays() {
+        return numberOfDays;
+    }
+
+    public void setNumberOfDays(int numberOfDays) {
+        this.numberOfDays = numberOfDays;
     }
 }
 

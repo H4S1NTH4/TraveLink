@@ -28,9 +28,9 @@ public class SupplementSeason {
     @JsonIgnore
     private Season season;
 
-    @OneToMany(mappedBy = "supplementSeason" , cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<BookingSupplement> bookingSupplements = new HashSet<>();
+//    @OneToMany(mappedBy = "supplementSeason" , cascade = CascadeType.ALL)
+//    @JsonIgnore
+//    private Set<BookingSupplement> bookingSupplements = new HashSet<>();
 
     private double price;
 
@@ -76,13 +76,13 @@ public class SupplementSeason {
     }
 
 
-    public Set<BookingSupplement> getBookingSupplements() {
-        return bookingSupplements;
-    }
-
-    public void setBookingSupplements(Set<BookingSupplement> bookingSupplements) {
-        this.bookingSupplements = bookingSupplements;
-    }
+//    public Set<BookingSupplement> getBookingSupplements() {
+//        return bookingSupplements;
+//    }
+//
+//    public void setBookingSupplements(Set<BookingSupplement> bookingSupplements) {
+//        this.bookingSupplements = bookingSupplements;
+//    }
 
 
 }

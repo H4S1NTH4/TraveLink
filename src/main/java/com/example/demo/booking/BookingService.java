@@ -1,8 +1,20 @@
 package com.example.demo.booking;
 
+import com.example.demo.bookingRoomType.BookingRoomType;
+import com.example.demo.bookingRoomType.BookingRoomTypeRepository;
+import com.example.demo.bookingRoomType.DTO.BookingRoomTypeCreateDTO;
+import com.example.demo.bookingSupplement.BookingSupplement;
+import com.example.demo.bookingSupplement.BookingSupplementRepository;
+import com.example.demo.bookingSupplement.CreateBookingSupDTO;
 import com.example.demo.hotel.Hotel;
 import com.example.demo.hotel.HotelRepository;
+import com.example.demo.room_type.RoomType;
+import com.example.demo.room_type.RoomTypeRepository;
 import com.example.demo.season.Season;
+import com.example.demo.supplement.Supplement;
+import com.example.demo.supplement.SupplementRepository;
+import com.example.demo.user.User;
+import com.example.demo.user.UserRepository;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+
+import java.util.*;
 import java.util.List;
 
 @Service
@@ -22,28 +33,106 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
     private final HotelRepository hotelRepository;
+    private final UserRepository userRepository;
+    private final RoomTypeRepository roomTypeRepository;
+    private final BookingRoomTypeRepository bookingRoomTypeRepository;
+    private final SupplementRepository supplementRepository;
+    private final BookingSupplementRepository bookingSupplementRepository;
 
     @Autowired
-    public BookingService(BookingRepository bookingRepository, HotelRepository hotelRepository){
+    public BookingService(BookingRepository bookingRepository, HotelRepository hotelRepository, UserRepository userRepository, RoomTypeRepository roomTypeRepository, BookingRoomTypeRepository bookingRoomTypeRepository, SupplementRepository supplementRepository, BookingSupplementRepository bookingSupplementRepository) {
         this.bookingRepository = bookingRepository;
         this.hotelRepository = hotelRepository;
+        this.userRepository = userRepository;
+        this.roomTypeRepository = roomTypeRepository;
+        this.bookingRoomTypeRepository = bookingRoomTypeRepository;
+        this.supplementRepository = supplementRepository;
+        this.bookingSupplementRepository = bookingSupplementRepository;
     }
 
+    // convert to hashset and set in booking
     public List<Booking> getBookings() {
         return bookingRepository.findAll();
     }
 
+    //get booking by user id
+    public List<Booking> getBookingsByUserId(Long user_Id) {
 
-    //create method createBooking
-    public Booking createBooking(Booking booking, Long hotelId) {
+        User user = userRepository.findById(user_Id)
+                .orElseThrow(() -> new IllegalArgumentException("User with id" +user_Id+ " not found"));
 
-        Hotel hotel = hotelRepository.findById(hotelId)
-                .orElseThrow(()-> new IllegalArgumentException("Hotel with id: " +hotelId+ " not found"));
-
-        //add logic to validate whether the rooms are available or not.
-        booking.setHotel(hotel);
-        return bookingRepository.save(booking);
+        return bookingRepository.findBookingsByUserId(user_Id);
     }
 
+
+
+    //create method createBooking
+    public Booking createBooking(Booking booking, Long hotelId, Long userId,
+                                 List<BookingRoomTypeCreateDTO> roomTypeDTOs,
+                                 List<CreateBookingSupDTO> supplementDTOs) {
+
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new IllegalArgumentException("Hotel with id: " + hotelId + " not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User with id: " + userId + " not found"));
+
+        booking.setHotel(hotel);
+        booking.setUser(user);
+
+        //Save Booking
+        Booking savedBooking = bookingRepository.save(booking);
+
+        //Check and Book rooms
+//        List<BookingRoomType> bookingRoomTypes = new ArrayList<>();
+        Set<BookingRoomType> bookingRoomTypes = new HashSet<>();
+
+        for (BookingRoomTypeCreateDTO dto : roomTypeDTOs) {
+            RoomType roomType = roomTypeRepository.findById(dto.getRoomTypeId())
+                    .orElseThrow(() -> new IllegalStateException("Room type with id " + dto.getRoomTypeId() + " not found"));
+
+            BookingRoomType bookingRoomType = new BookingRoomType();
+
+            bookingRoomType.setBooking(savedBooking);
+            bookingRoomType.setRoomType(roomType);
+
+            bookingRoomType.setRoomTypeName(roomType.getName());
+            bookingRoomType.setCheckinDate(dto.getCheckinDate());
+            bookingRoomType.setCheckOutDate(dto.getCheckoutDate());
+            bookingRoomType.setQuantity(dto.getQuantity());
+            bookingRoomType.setRoomPrice(dto.getRoomPrice());
+            bookingRoomType.setGuestCount(dto.getGuestCount());
+            bookingRoomType.setNumberOfDays(dto.getNumberOfDays());
+
+            bookingRoomTypes.add(bookingRoomTypeRepository.save(bookingRoomType));
+
+        }
+
+//        List<BookingSupplement> bookingSupplements = new ArrayList<>();
+        Set<BookingSupplement> bookingSupplements = new HashSet<>();
+        for(CreateBookingSupDTO dto : supplementDTOs) {
+
+            BookingSupplement bookingSupplement = new BookingSupplement();
+
+            Supplement supplement = supplementRepository.findById(dto.getSupplementId())
+                    .orElseThrow(() -> new IllegalStateException("Supplement with id " + dto.getSupplementId() + "not found"));
+
+
+            bookingSupplement.setBooking(savedBooking);
+            bookingSupplement.setSupplement(supplement);
+
+            bookingSupplement.setSupplementName(supplement.getSupplementName());
+
+            bookingSupplement.setSupplementPrice(dto.getSupplementPrice());
+            bookingSupplement.setSupplementQuantity(dto.getSupplementQuantity());
+            bookingSupplement.setNoOfDays(dto.getNoOfDays());
+
+            bookingSupplements.add(bookingSupplementRepository.save(bookingSupplement));
+        }
+
+        savedBooking.setBookingRoomTypes(bookingRoomTypes);
+        savedBooking.setBookingSupplements(bookingSupplements);
+        return bookingRepository.save(booking);
+
+    }
 
 }
