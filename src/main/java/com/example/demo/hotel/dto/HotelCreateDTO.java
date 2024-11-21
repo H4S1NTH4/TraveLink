@@ -11,7 +11,7 @@ public class HotelCreateDTO {
     @Email(message = "Please provide valid Email")
     private String email;
 
-    @Size(max = 500, message = "Description must be less than 500 characters")
+    @Size(max = 2000, message = "Description must be less than 2000 characters")
     private String description;
 
     @NotNull(message = "Address name is required")

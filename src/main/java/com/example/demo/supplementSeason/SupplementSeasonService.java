@@ -108,7 +108,7 @@ public class SupplementSeasonService {
         Map<Long, List<SupplementSeason>> groupedBySupplement = supplementSeasons.stream()
                 .collect(Collectors.groupingBy(rs -> rs.getSupplement().getSupplement_Id()));
 
-        //Iterate each room type & cal weighted avg price , min qty
+        //Iterate each supplement type & cal weighted avg price , min qty
         List<SupplementSeasonSummaryDTO> summaryDTOS = groupedBySupplement.entrySet().stream()
                 .map(entry ->{
                     List<SupplementSeason> groupedSeasons = entry.getValue();
