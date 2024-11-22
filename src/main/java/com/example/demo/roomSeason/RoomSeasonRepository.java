@@ -66,4 +66,19 @@ AND s2.seasonEndDate >= :checkInDate
             @Param("checkInDate") LocalDate checkInDate,
             @Param("checkOutDate") LocalDate checkOutDate);
 
+
+
+    @Query("""
+            SELECT SUM(brt.quantity)
+            FROM BookingRoomType brt
+            WHERE brt.booking.hotel.hotel_Id = :hotelId
+            AND brt.roomType.roomTypeId = :roomTypeId
+            AND brt.checkinDate < :checkOutDate
+            AND brt.checkOutDate > :checkInDate
+       """)
+    int getBookedRoomQuantity(@Param("roomTypeId") Long roomTypeId,
+                                     @Param("checkInDate") LocalDate checkInDate,
+                                     @Param("checkOutDate") LocalDate checkOutDate,
+                                     @Param("hotelId") Long hotelId);
+
     }

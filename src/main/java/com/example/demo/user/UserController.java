@@ -32,7 +32,7 @@ public class UserController {
     public ResponseEntity<String> login(@RequestBody UserLoginRequest request) {
         User user = userService.findByEmailAndPassword(request.getEmail(), request.getPassword());
         if (user != null) {
-            String token = jwtUtil.generateToken(user.getEmail(),user.getUserId());
+            String token = jwtUtil.generateToken(user.getEmail(),user.getUserId(),user.getRole());
             return ResponseEntity.ok(token);
         }
         return ResponseEntity.status(401).body("Invalid credentials");

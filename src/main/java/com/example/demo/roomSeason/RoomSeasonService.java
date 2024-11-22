@@ -156,6 +156,7 @@ public class RoomSeasonService {
                             .min()
                             .orElse(0);
 
+
                     // Collect room season IDs
 
                     List<Long> roomSeasonIds = groupedSeasons.stream()
@@ -164,6 +165,10 @@ public class RoomSeasonService {
 
                     // Get room type details
                     RoomType roomType = groupedSeasons.get(0).getRoomType();
+
+                    //subtracting booked room count
+                    int bookedRoomCount = roomSeasonRepository.getBookedRoomQuantity(roomType.getRoomTypeId(),checkInDate,checkOutDate,hotel_Id);
+                    minQuantity = minQuantity - bookedRoomCount;
 
                     RoomSeasonSummaryDTO summaryDTO = new RoomSeasonSummaryDTO();
 
