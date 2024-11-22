@@ -1,6 +1,7 @@
 package com.example.demo.roomSeason;
 
 import com.example.demo.season.Season;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -76,9 +77,9 @@ AND s2.seasonEndDate >= :checkInDate
             AND brt.checkinDate < :checkOutDate
             AND brt.checkOutDate > :checkInDate
        """)
-    int getBookedRoomQuantity(@Param("roomTypeId") Long roomTypeId,
-                                     @Param("checkInDate") LocalDate checkInDate,
-                                     @Param("checkOutDate") LocalDate checkOutDate,
-                                     @Param("hotelId") Long hotelId);
+    Integer getBookedRoomQuantity(@Param("roomTypeId") Long roomTypeId,
+                                             @Param("checkInDate") LocalDate checkInDate,
+                                             @Param("checkOutDate") LocalDate checkOutDate,
+                                             @Param("hotelId") Long hotelId);
 
     }

@@ -167,7 +167,15 @@ public class RoomSeasonService {
                     RoomType roomType = groupedSeasons.get(0).getRoomType();
 
                     //subtracting booked room count
-                    int bookedRoomCount = roomSeasonRepository.getBookedRoomQuantity(roomType.getRoomTypeId(),checkInDate,checkOutDate,hotel_Id);
+//                    int bookedRoomCount = roomSeasonRepository.getBookedRoomQuantity(roomType.getRoomTypeId(),checkInDate,checkOutDate,hotel_Id);
+
+                    // Assuming getBookedRoomQuantity returns Integer, not int
+                    Integer bookedRoomCount = roomSeasonRepository.getBookedRoomQuantity(roomType.getRoomTypeId(), checkInDate, checkOutDate, hotel_Id);
+
+// Handle null value
+                    bookedRoomCount = (bookedRoomCount != null) ? bookedRoomCount : 0;
+
+
                     minQuantity = minQuantity - bookedRoomCount;
 
                     RoomSeasonSummaryDTO summaryDTO = new RoomSeasonSummaryDTO();
