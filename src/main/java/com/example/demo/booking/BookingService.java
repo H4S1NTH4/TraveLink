@@ -15,6 +15,7 @@ import com.example.demo.supplement.Supplement;
 import com.example.demo.supplement.SupplementRepository;
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
 
@@ -90,6 +92,19 @@ public class BookingService {
             RoomType roomType = roomTypeRepository.findById(dto.getRoomTypeId())
                     .orElseThrow(() -> new IllegalStateException("Room type with id " + dto.getRoomTypeId() + " not found"));
 
+            //validate room quantity
+//            Integer availRoom = bookingRoomTypeRepository.getAvailableRoomQuantity(roomType.getRoomTypeId(),dto.getCheckinDate(),
+//                    dto.getCheckoutDate(),hotelId);
+//
+//            System.out.println("available rooms for room type "+roomType.getName()+"is : "+availRoom);
+//
+            if(bookingRoomTypeRepository.getAvailableRoomQuantity(roomType.getRoomTypeId(),dto.getCheckinDate(),
+                    dto.getCheckoutDate(),hotelId) < dto.getQuantity()) {
+                throw new IllegalStateException("Not enough rooms available.");
+            }
+
+
+
             BookingRoomType bookingRoomType = new BookingRoomType();
 
             bookingRoomType.setBooking(savedBooking);
@@ -134,5 +149,17 @@ public class BookingService {
         return bookingRepository.save(booking);
 
     }
+
+//    public void checkAvailableRooms(){
+//
+//        LocalDate checkInDate = LocalDate.parse("2024-12-01");
+//        LocalDate checkOutDate = LocalDate.parse("2024-12-05");
+//        Long roomTypeId = 7L; // Example room type ID (Long type)
+//        Long hotelId = 32L; // Example hotel ID (Long type)
+//
+////        Integer availRoom = bookingRoomTypeRepository.getAvailableRoomQuantity(roomTypeId,checkInDate,checkOutDate,hotelId);
+////
+////        System.out.println("available rooms for room type " + availRoom);
+//    }
 
 }

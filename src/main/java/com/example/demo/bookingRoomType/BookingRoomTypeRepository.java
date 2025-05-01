@@ -1,27 +1,40 @@
 package com.example.demo.bookingRoomType;
 
-import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
+@Repository
 public interface BookingRoomTypeRepository extends JpaRepository<BookingRoomType, Long> {
 
-//    @Query(value = """
-//SELECT CASE WHEN
-//            (:requestedQuantity + COALESCE(SUM(brt.quantity), 0)) <= rs.quantity
-//            THEN true ELSE false END
-//            FROM RoomType rt
-//            LEFT JOIN BookingRoomType brt ON brt.roomType.roomTypeId = rt.roomTypeId
-//            JOIN RoomSeason rs ON rs.roomType.roomTypeId = rt.roomTypeId
-//            AND brt.checkinDate < :checkoutDate
-//            AND brt.checkOutDate > :checkinDate
-//            WHERE rt.id = :roomTypeId """)
-//    boolean isRoomAvailable(@Param("roomTypeId") Long roomTypeId,
-//                            @Param("checkinDate") LocalDate checkinDate,
-//                            @Param("checkoutDate") LocalDate checkoutDate,
-//                            @Param("requestedQuantity") int requestedQuantity);
-}
 
+
+    @Query("""
+         SELECT min(rs.quantity -COALESCE((
+            SELECT SUM(brt.quantity)
+            FROM BookingRoomType brt
+            WHERE brt.booking.hotel.hotel_Id = :hotelId
+            AND brt.roomType.roomTypeId = :roomTypeId
+            AND brt.checkinDate < :checkOutDate
+            AND brt.checkOutDate > :checkInDate),0) )
+        FROM RoomSeason rs
+        WHERE rs.hotel.hotel_Id = :hotelId
+        AND rs.roomType.roomTypeId = :roomTypeId
+        AND rs.season.seasonStartDate <= :checkOutDate
+        AND rs.season.seasonEndDate >= :checkInDate
+       """)
+    Integer getAvailableRoomQuantity(@Param("roomTypeId") Long roomTypeId,
+                                          @Param("checkInDate") LocalDate checkInDate,
+                                          @Param("checkOutDate") LocalDate checkOutDate,
+                                          @Param("hotelId") Long hotelId);
+
+    //       HAVING MIN(rs.quantity - COALESCE(SUM(brt.quantity), 0)) >= :requestedRoomQuantity
+
+
+
+
+}

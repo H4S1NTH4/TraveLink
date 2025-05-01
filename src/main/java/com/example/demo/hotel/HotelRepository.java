@@ -19,94 +19,49 @@ public interface HotelRepository
     Optional<Hotel> findHotelByEmail(String email);
 
 
-    //Get hotels with occupancy for the number of guests
-    @Query(value = """
-WITH SeasonsCovered AS (
-    SELECT
-        s.season_id,
-        s.season_start_date,
-        s.season_end_date,
-        rs.hotel_id
-    FROM
-        Season s
-    JOIN
-        Room_Season rs ON s.season_id = rs.season_id
-    WHERE
-        s.season_start_date <= :checkOutDate AND
-        s.season_end_date >= :checkInDate
-),
-BookedCapacity AS (
-    SELECT
-        sc.season_id,
-        SUM(rt.capacity * brt.quantity) AS booked_capacity
-    FROM
-        SeasonsCovered sc
-    JOIN
-        Room_Season rs ON sc.season_id = rs.season_id
-    JOIN
-        Room_Type rt ON rs.room_type_id = rt.room_type_id
-    JOIN
-        Booking_Room_Type brt ON brt.room_season_id = rs.room_season_id
-    WHERE
-        brt.checkin_date < :checkOutDate
-        AND brt.check_out_date > :checkInDate
-    GROUP BY
-        sc.season_id
-),
-AvailableCapacity AS (
-    SELECT
-        scp.hotelId,
-        scp.season_id,
-        scp.total_capacity,
-        COALESCE(bc.booked_capacity, 0) AS booked_capacity,
-        (scp.total_capacity - COALESCE(bc.booked_capacity, 0)) AS available_capacity
-    FROM
-        seasonal_capacity scp
-    JOIN
-        SeasonsCovered sc ON scp.season_id = sc.season_id
-    LEFT JOIN
-        BookedCapacity bc ON scp.season_id = bc.season_id
-)
-SELECT
-    h.*
-FROM
-    Hotel h
-WHERE
-    EXISTS (
+    @Query("""
+    SELECT h
+    FROM Hotel h
+    WHERE EXISTS (
         SELECT 1
-        FROM Room_Season rs
-        JOIN Season s ON rs.season_id = s.season_id
-        WHERE rs.hotel_id = h.hotel_id
-          AND s.season_start_date <= :checkInDate
-          AND s.season_end_date >= :checkInDate
+        FROM RoomSeason rs
+        JOIN rs.season s
+        WHERE rs.hotel.hotel_Id = h.hotel_Id
+          AND s.seasonStartDate <= :checkOutDate
+          AND s.seasonEndDate >= :checkInDate
     )
-    AND EXISTS (
-        SELECT 1
-        FROM Room_Season rs
-        JOIN Season s ON rs.season_id = s.season_id
-        WHERE rs.hotel_id = h.hotel_id
-          AND s.season_start_date <= :checkOutDate
-          AND s.season_end_date >= :checkOutDate
-    )
+    
+    AND (:location IS NULL 
+         OR h.address LIKE CONCAT('%', :location, '%')
+         OR h.city LIKE CONCAT('%', :location, '%')
+         OR h.state LIKE CONCAT('%', :location, '%')
+         OR h.country LIKE CONCAT('%', :location, '%'))
+    
     AND (
-        (:location IS NULL OR
-         h.address LIKE CONCAT('%', :location, '%') OR
-         h.city LIKE CONCAT('%', :location, '%') OR
-         h.state LIKE CONCAT('%', :location, '%') OR
-         h.country LIKE CONCAT('%', :location, '%'))
-    )
-    AND (
-        SELECT MIN(ac.available_capacity)
-        FROM AvailableCapacity ac
-        WHERE ac.hotelId = h.hotel_id
-    ) >= :guestCount -- Ensure all seasons for hotel have capacity >= guestCount
-""", nativeQuery = true)
+        SELECT MIN(
+            (rs.quantity * rs.roomType.Capacity) - 
+            COALESCE((
+                SELECT SUM(brt.quantity * brt.roomType.Capacity)
+                FROM BookingRoomType brt
+                WHERE brt.roomType.roomTypeId = rs.roomType.roomTypeId
+                  AND brt.booking.hotel.hotel_Id = h.hotel_Id
+                  AND brt.checkinDate < :checkOutDate
+                  AND brt.checkOutDate > :checkInDate
+            ), 0)
+        )
+        FROM RoomSeason rs
+        WHERE rs.hotel.hotel_Id = h.hotel_Id
+          AND rs.season.seasonStartDate <= :checkOutDate
+          AND rs.season.seasonEndDate >= :checkInDate
+    ) >= :guestCount
+""")
     List<Hotel> findAvailableHotels(
             @Param("guestCount") int guestCount,
             @Param("checkInDate") LocalDate checkInDate,
             @Param("checkOutDate") LocalDate checkOutDate,
-            @Param("location") String location // location can be null
+            @Param("location") String location
     );
+
 
 
 
